@@ -21,6 +21,7 @@ POSTGRES_DB=auth
 POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
 REDIS_LOCATION=192.168.10.1:6379
+_EOF_
 ```
 secret key should be a random string which is keeped in secret
 4. create db instances (postgres, redis)
