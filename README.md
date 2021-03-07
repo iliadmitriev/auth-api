@@ -11,7 +11,7 @@ started from a scratch
 python3 -m venv venv
 source venv/bin/activate
 ```
-3. create `.env` file
+3. create `.env` file with environment variables and export them to shell
 ```shell
 cat > .env << _EOF_
 SECRET_KEY=testsecretkey
@@ -22,6 +22,9 @@ POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
 REDIS_LOCATION=192.168.10.1:6379
 _EOF_
+
+export $(cat .env | xargs)
+
 ```
 secret key should be a random string which is keeped in secret
 4. create db instances (postgres, redis)
