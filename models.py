@@ -17,9 +17,9 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    username = Column('firstname', String(100))
-    password = Column('firstname', String(200))
-    is_active = Column(Boolean(), default=False)
-    is_superuser = Column(Boolean(), default=False)
-    created = Column(DateTime(timezone=True), server_default=func.now())
-    last_login = Column(DateTime(timezone=True))
+    username = Column('username', String(100))
+    password = Column('password', String(200))
+    is_active = Column('is_active', Boolean(), default=False)
+    is_superuser = Column('is_superuser', Boolean(), default=False)
+    created = Column('created', DateTime(timezone=True), server_default=func.now())
+    last_login = Column('last_login', DateTime(timezone=True))
