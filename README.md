@@ -35,3 +35,11 @@ docker run -d --name auth-redis --hostname auth-redis \
 docker run -d --name auth-postgres --hostname auth-postgres \
     -p 5432:5432 --env-file .env postgres:13-alpine
 ```
+5. install pip modules from project requirements
+```shell
+pip install -r requirements.txt
+```
+6. migrate alembic revisions
+```shell
+alembic upgrade head
+```
