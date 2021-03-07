@@ -19,6 +19,7 @@ class User(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     username = Column('username', String(100), index=True, unique=True)
     password = Column('password', String(200))
+    email = Column('email', String(100), index=True, unique=True)
     is_active = Column('is_active', Boolean(), default=False)
     is_superuser = Column('is_superuser', Boolean(), default=False)
     created = Column('created', DateTime(timezone=True), server_default=func.now())
