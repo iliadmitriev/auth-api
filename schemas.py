@@ -16,7 +16,7 @@ class RegisterUser(Schema):
     )
     email = fields.String(
         required=True,
-        validate=validate.Email
+        validate=validate.Email()
     )
 
     class Meta:
@@ -39,7 +39,6 @@ class LoginUser(Schema):
 
 class User(Schema):
     id = fields.Integer(dump_only=True)
-    username = fields.String(dump_only=True)
     email = fields.String(dump_only=True)
     is_active = fields.Boolean(dump_only=True)
     created = fields.DateTime(dump_only=True)
@@ -60,3 +59,8 @@ class Message(Schema):
         dump_only=True,
         required=True
     )
+
+
+register_user_schema = RegisterUser()
+login_user_schema = LoginUser()
+user_schema = User()
