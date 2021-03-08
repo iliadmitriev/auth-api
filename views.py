@@ -22,6 +22,7 @@ from redis import (
 from schemas import (
     register_user_schema,
     user_schema,
+    full_user,
     message_schema,
     login_user_schema,
     token_schema
@@ -105,7 +106,7 @@ class UserLogin(web.View):
         if user.password != password_hash:
             raise RecordNotFound(f'{User.__name__} with email={validated_data["email"]} is not found')
 
-        user_data = user_schema.dump(user)
+        user_data = full_user.dump(user)
 
         if not user_data.get('is_active'):
             raise UserIsNotActivated(f'{User.__name__} with email={validated_data["email"]} is not activated')

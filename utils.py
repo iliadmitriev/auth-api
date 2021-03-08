@@ -36,6 +36,9 @@ async def gen_token_for_user(user):
         'jti': uuid4().hex,
     }
 
+    if user.get('is_superuser'):
+        token['scope'] = 'admin'
+
     access_token = token | {
         'token_type': 'access_token',
         'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)

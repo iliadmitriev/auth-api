@@ -41,6 +41,15 @@ class User(Schema):
     last_login = fields.DateTime(dump_only=True)
 
 
+class FullUser(Schema):
+    id = fields.Integer(dump_only=True)
+    email = fields.String(dump_only=True)
+    is_active = fields.Boolean(dump_only=True)
+    is_superuser = fields.Boolean(dump_only=True)
+    created = fields.DateTime(dump_only=True)
+    last_login = fields.DateTime(dump_only=True)
+
+
 class Token(Schema):
     access_token = fields.String(dump_only=True)
     refresh_token = fields.String(dump_only=True)
@@ -60,5 +69,6 @@ class Message(Schema):
 register_user_schema = RegisterUser()
 login_user_schema = LoginUser()
 user_schema = User()
+full_user = FullUser()
 token_schema = Token()
 message_schema = Message()
