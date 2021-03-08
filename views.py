@@ -5,11 +5,13 @@ from aiohttp_apispec import (
     response_schema
 )
 from models import User
-from exceptions import PasswordsDontMatch, RecordNotFound, UserIsNotActivated
+from exceptions import PasswordsDontMatch, RecordNotFound, UserIsNotActivated, RefreshTokenNotFound
 from utils import (
     generate_password_hash,
     get_data_from_request,
-    gen_token_for_user
+    gen_token_for_user,
+    decode_token,
+    get_refresh_token
 )
 from db import (
     create_user,
@@ -25,7 +27,8 @@ from schemas import (
     full_user,
     message_schema,
     login_user_schema,
-    token_schema
+    token_schema,
+    refresh_token_schema
 )
 from settings import JWT_EXP_REFRESH_SECONDS
 
@@ -88,7 +91,7 @@ class UserLogin(web.View):
                 "schema": message_schema
             },
             404: {
-                "description": "user is not found or wrong email or password",
+                "description": "user is not found or wrong email/password",
                 "schema": message_schema
             },
 
@@ -115,5 +118,43 @@ class UserLogin(web.View):
 
         await set_redis_key(self.request.app['redis'], token['refresh_token'], '1', JWT_EXP_REFRESH_SECONDS)
 
+        response = token_schema.dump(token)
+        return web.json_response(response, status=200)
+
+
+class RefreshToken(web.View):
+    @request_schema(refresh_token_schema)
+    @response_schema(token_schema)
+    @docs(
+        tags=['user'],
+        summary="Refresh token method",
+        description="This method is used to refresh access token for user",
+        responses={
+            200: {
+                "description": "successfully refreshed token",
+                "schema": token_schema
+            },
+            400: {
+                "description": "validation failed",
+                "schema": message_schema
+            },
+            403: {
+                "description": "user is not activated",
+                "schema": message_schema
+            },
+            404: {
+                "description": "user is not found or wrong email/password",
+                "schema": message_schema
+            },
+        }
+    )
+    async def post(self):
+        data = await get_data_from_request(self.request)
+        validated_data = refresh_token_schema.load(data)
+        cache = await get_redis_key(self.request.app['redis'], validated_data['refresh_token'])
+        if not cache:
+            raise RefreshTokenNotFound('Refresh token not found')
+        payload = await decode_token(validated_data['refresh_token'])
+        token = await get_refresh_token(payload)
         response = token_schema.dump(token)
         return web.json_response(response, status=200)
