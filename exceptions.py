@@ -18,3 +18,6 @@ class UserAlreadyExists(Exception):
 class UserIsNotActivated(Exception):
     """User with given email address is not activated"""
 
+
+class RefreshTokenNotFound(Exception):
+    """Raised when refresh token is not found in redis storage"""

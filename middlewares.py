@@ -5,7 +5,8 @@ from exceptions import (
     RecordNotFound,
     PasswordsDontMatch,
     UserAlreadyExists,
-    UserIsNotActivated
+    UserIsNotActivated,
+    RefreshTokenNotFound
 )
 from json import JSONDecodeError
 from marshmallow import ValidationError
@@ -46,7 +47,7 @@ async def error_middleware(request, handler):
         return await handle_http_error(request, e, status=400)
     except UserIsNotActivated as e:
         return await handle_http_error(request, e, status=403)
-    except RecordNotFound as e:
+    except (RefreshTokenNotFound, RecordNotFound) as e:
         return await handle_http_error(request, e, status=404)
     except Exception as e:
         return await handle_http_error(request, e, status=500)
