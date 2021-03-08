@@ -45,6 +45,31 @@ alembic upgrade head
 ```
 
 
+# How to use
+
+Read api documentation http://localhost:8080/auth/v1/docs
+1. Register user 
+```shell
+curl -v -F password=321123 -F password2=321123 -F email=user@example.com \
+  --url http://localhost:8080/auth/v1/register
+```
+2. Get a token pair (access and refresh)
+```shell
+curl -v -F password=321123 -F email=user@example.com \
+  --url http://localhost:8080/auth/v1/login
+```
+
+access_token - is needed to authenticate your queries (it expires in 5 minutes)
+
+refresh_token - is needed to refresh access token (it expires in 24 hours)
+
+3. Refresh access token 
+```shell
+curl -v --url http://localhost:8080/auth/v1/refresh \
+ -F refresh_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3LCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJqdGkiOiIwMWVjNjRhOWZlZjc0ZWIwOWViMGI1YmY1NGViOWVjMSIsInRva2VuX3R5cGUiOiJyZWZyZXNoX3Rva2VuIiwiZXhwIjoxNjE1MzA0MDQ2fQ.QyRVKKkxRNcql84ri6HPcL78D348LOPKH_BmKGUdpFo
+ ```
+
+
 # Docker
 
 ## Build 
