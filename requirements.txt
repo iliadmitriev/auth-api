@@ -1,7 +1,5 @@
 aiohttp-apispec==2.2.1
-aiohttp-jinja2==1.4.2
 aiohttp-jwt==0.6.1
-aiohttp-swagger==1.0.15
 aiohttp==3.7.3
 aiopg==1.1.0
 alembic==1.5.4
@@ -12,7 +10,6 @@ chardet==3.0.4
 coverage==5.4
 idna==3.1
 iniconfig==1.1.1
-Jinja2==2.11.3
 Mako==1.1.4
 MarkupSafe==1.1.1
 marshmallow==3.10.0
