@@ -9,6 +9,9 @@ APP_HOST = env.get('APP_HOST', '0.0.0.0')
 access_log_format = '%r %s %b %t "%a"'
 
 SECRET_KEY = env.get('SECRET_KEY')
+JWT_EXP_ACCESS_SECONDS = env.get('JWT_EXP_ACCESS_SECONDS', 300)
+JWT_EXP_REFRESH_SECONDS = env.get('JWT_EXP_REFRESH_SECONDS', 86400)
+JWT_ALGORITHM = env.get('JWT_ALGORITHM', 'HS256')
 
 conf = {
     'engine': env.get('ENGINE', 'postgresql'),
@@ -22,3 +25,5 @@ conf = {
 dsn = f'{conf["engine"]}://{conf["user"]}:{conf["password"]}'\
         f'@{conf["host"]}:{conf["port"]}/{conf["database"]}'
 
+
+redis_location = env.get('REDIS_LOCATION')
