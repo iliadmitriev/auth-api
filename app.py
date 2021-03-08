@@ -5,8 +5,9 @@ import sys
 import logging
 
 from db import setup_db
+from redis import setup_redis
 from middlewares import setup_middlewares
-from settings import dsn, access_log_format, APP_PORT, APP_HOST
+from settings import dsn, access_log_format, APP_PORT, APP_HOST, redis_location
 
 
 async def init_app(argv=None):
@@ -23,6 +24,7 @@ async def init_app(argv=None):
     )
     setup_middlewares(app)
     setup_db(app, dsn=dsn)
+    setup_redis(app, redis_location=redis_location)
 
     return app
 
