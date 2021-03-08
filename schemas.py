@@ -2,10 +2,6 @@ from marshmallow import Schema, fields, validate
 
 
 class RegisterUser(Schema):
-    username = fields.String(
-        required=True,
-        validate=validate.Length(max=100)
-    )
     password = fields.String(
         required=True,
         validate=validate.Length(max=100)
@@ -24,9 +20,9 @@ class RegisterUser(Schema):
 
 
 class LoginUser(Schema):
-    username = fields.String(
+    email = fields.String(
         required=True,
-        validate=validate.Length(max=100)
+        validate=validate.Email()
     )
     password = fields.String(
         required=True,
