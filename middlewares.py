@@ -4,7 +4,8 @@ from exceptions import (
     BadRequest,
     RecordNotFound,
     PasswordsDontMatch,
-    UserAlreadyExists
+    UserAlreadyExists,
+    UserIsNotActivated
 )
 from json import JSONDecodeError
 from marshmallow import ValidationError
@@ -15,7 +16,7 @@ from settings import SECRET_KEY
 async def handle_http_error(request, e, status):
     return web.json_response(
         {
-            'message':  f'{type(e).__name__}: {str(e)}'
+            'message': f'{type(e).__name__}: {str(e)}'
         },
         status=status
     )
@@ -43,6 +44,8 @@ async def error_middleware(request, handler):
             UserAlreadyExists
     ) as e:
         return await handle_http_error(request, e, status=400)
+    except UserIsNotActivated as e:
+        return await handle_http_error(request, e, status=403)
     except RecordNotFound as e:
         return await handle_http_error(request, e, status=404)
     except Exception as e:

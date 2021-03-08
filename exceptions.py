@@ -13,3 +13,8 @@ class PasswordsDontMatch(Exception):
 
 class UserAlreadyExists(Exception):
     """User with given email address already exists"""
+
+
+class UserIsNotActivated(Exception):
+    """User with given email address is not activated"""
+
