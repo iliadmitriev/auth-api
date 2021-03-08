@@ -33,7 +33,7 @@ class LoginUser(Schema):
         strict = True
 
 
-class User(Schema):
+class RegisteredUser(Schema):
     id = fields.Integer(dump_only=True)
     email = fields.String(dump_only=True)
     is_active = fields.Boolean(dump_only=True)
@@ -41,7 +41,7 @@ class User(Schema):
     last_login = fields.DateTime(dump_only=True)
 
 
-class FullUser(Schema):
+class User(Schema):
     id = fields.Integer(dump_only=True)
     email = fields.String(dump_only=True)
     is_active = fields.Boolean(dump_only=True)
@@ -68,8 +68,8 @@ class Message(Schema):
 
 register_user_schema = RegisterUser()
 login_user_schema = LoginUser()
+registered_user_schema = RegisteredUser()
 user_schema = User()
-full_user = FullUser()
 token_schema = Token()
 refresh_token_schema = RefreshToken()
 message_schema = Message()

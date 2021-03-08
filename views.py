@@ -24,7 +24,7 @@ from redis import (
 from schemas import (
     register_user_schema,
     user_schema,
-    full_user,
+    registered_user_schema,
     message_schema,
     login_user_schema,
     token_schema,
@@ -35,7 +35,7 @@ from settings import JWT_EXP_REFRESH_SECONDS
 
 class UserRegister(web.View):
     @request_schema(register_user_schema)
-    @response_schema(user_schema)
+    @response_schema(registered_user_schema)
     @docs(
         tags=['user'],
         summary="A new user register method",
@@ -43,7 +43,7 @@ class UserRegister(web.View):
         responses={
             200: {
                 "description": "a new user successfully registered",
-                "schema": user_schema
+                "schema": registered_user_schema
             },
             400: {
                 "description": "a new user register failed",
@@ -66,7 +66,7 @@ class UserRegister(web.View):
         async with self.request.app['db'].acquire() as conn:
             user = await create_user(conn, User, user_data)
 
-        response = user_schema.dump(user)
+        response = registered_user_schema.dump(user)
         return web.json_response(response, status=200)
 
 
