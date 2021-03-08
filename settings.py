@@ -8,7 +8,7 @@ APP_HOST = env.get('APP_HOST', '0.0.0.0')
 
 access_log_format = '%r %s %b %t "%a"'
 
-JWT_SECRET_KEY = env.get('SECRET_KEY')
+SECRET_KEY = env.get('SECRET_KEY')
 
 conf = {
     'engine': env.get('ENGINE', 'postgresql'),
