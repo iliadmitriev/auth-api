@@ -1,12 +1,13 @@
 import aiopg.sa
-from exceptions import UserAlreadyExists
+from exceptions import UserAlreadyExists, RecordNotFound
 from sqlalchemy.sql import select, update, insert, delete
 from psycopg2 import errors
 
 
 async def init_pg(app):
     engine = await aiopg.sa.create_engine(
-        dsn=app['dsn']
+        dsn=app['dsn'],
+        minsize=10, maxsize=30
     )
     app['db'] = engine
 
@@ -34,3 +35,12 @@ async def create_user(conn, obj, values):
         raise UserAlreadyExists('User with this email is already exists')
 
     return record
+
+
+async def get_user_by_email(conn, obj, email):
+    result = await conn.execute(select([obj]).where(obj.email == email))
+    record = await result.first()
+    if not record:
+        raise RecordNotFound(f'{obj.__name__} with email={email} is not found')
+    return record
+
