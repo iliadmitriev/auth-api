@@ -5,7 +5,12 @@ from aiohttp_apispec import (
     response_schema
 )
 from models import User
-from exceptions import PasswordsDontMatch, RecordNotFound, UserIsNotActivated, RefreshTokenNotFound
+from exceptions import (
+    PasswordsDontMatch,
+    RecordNotFound,
+    UserIsNotActivated,
+    RefreshTokenNotFound
+)
 from utils import (
     generate_password_hash,
     get_data_from_request,
@@ -109,7 +114,7 @@ class UserLogin(web.View):
         if user.password != password_hash:
             raise RecordNotFound(f'{User.__name__} with email={validated_data["email"]} is not found')
 
-        user_data = full_user.dump(user)
+        user_data = user_schema.dump(user)
 
         if not user_data.get('is_active'):
             raise UserIsNotActivated(f'{User.__name__} with email={validated_data["email"]} is not activated')
