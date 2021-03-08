@@ -43,3 +43,19 @@ pip install -r requirements.txt
 ```shell
 alembic upgrade head
 ```
+
+
+# Docker
+
+## Build 
+
+```shell
+docker build -t auth_api ./
+```
+
+## Run 
+
+```shell
+docker run -d -p 8080:8080 --name auth-api \
+  --hostname auth-api --env-file .env auth_api
+```
