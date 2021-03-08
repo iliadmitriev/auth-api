@@ -60,3 +60,4 @@ class Message(Schema):
 register_user_schema = RegisterUser()
 login_user_schema = LoginUser()
 user_schema = User()
+message_schema = Message()

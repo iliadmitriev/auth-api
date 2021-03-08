@@ -1,5 +1,5 @@
 from aiohttp import web
-from schemas import register_user_schema, user_schema
+from schemas import register_user_schema, user_schema, message_schema
 from db import create_user
 from models import User
 from exceptions import PasswordsDontMatch
@@ -16,12 +16,16 @@ class UserRegister(web.View):
     @response_schema(user_schema)
     @docs(
         tags=['register'],
-        summary="Register new user method",
-        description="This method is used for register new user accounts",
+        summary="A new user register method",
+        description="This method is used for registering new user accounts",
         responses={
             200: {
-                "description": "Success",
+                "description": "a new user successfully registered",
                 "schema": user_schema
+            },
+            400: {
+                "description": "a new user register failed",
+                "schema": message_schema
             }
         }
     )
