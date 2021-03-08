@@ -53,3 +53,29 @@ async def gen_token_for_user(user):
         "access_token": jwt.encode(access_token, SECRET_KEY, JWT_ALGORITHM),
         "refresh_token": jwt.encode(refresh_token, SECRET_KEY, JWT_ALGORITHM)
     }
+
+
+async def decode_token(token):
+    payload = jwt.decode(
+        token,
+        SECRET_KEY,
+        algorithms=[JWT_ALGORITHM]
+    )
+    return payload
+
+
+async def get_refresh_token(token):
+    token['jti'] = uuid4().hex
+    access_token = token | {
+        'token_type': 'access_token',
+        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
+    }
+
+    refresh_token = token | {
+        'token_type': 'refresh_token',
+    }
+
+    return {
+        "access_token": jwt.encode(access_token, SECRET_KEY, JWT_ALGORITHM),
+        "refresh_token": jwt.encode(refresh_token, SECRET_KEY, JWT_ALGORITHM)
+    }
