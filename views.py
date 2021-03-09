@@ -33,7 +33,9 @@ from schemas import (
     message_schema,
     login_user_schema,
     token_schema,
-    refresh_token_schema
+    refresh_token_schema,
+    users_schema,
+    user_schema_partial
 )
 from settings import JWT_EXP_REFRESH_SECONDS
 
@@ -163,3 +165,129 @@ class RefreshToken(web.View):
         token = await get_refresh_token(payload)
         response = token_schema.dump(token)
         return web.json_response(response, status=200)
+
+
+class UserListView(web.View):
+    @response_schema(users_schema)
+    @docs(
+        tags=['admin'],
+        summary="Get list of users method",
+        description="This method is used to get all users from db",
+        responses={
+            200: {
+                "description": "successfully got users list",
+                "schema": users_schema
+            },
+        }
+    )
+    async def get(self):
+        pass
+
+    @request_schema(user_schema)
+    @response_schema(user_schema)
+    @docs(
+        tags=['admin'],
+        summary="Create a new user method",
+        description="This method is used to create a new user",
+        responses={
+            200: {
+                "description": "successfully created user",
+                "schema": user_schema
+            },
+        }
+    )
+    async def post(self):
+        pass
+
+
+class UserDetailView(web.View):
+    @response_schema(user_schema)
+    @docs(
+        tags=['admin'],
+        summary="Get user by id method",
+        description="This method is used to get all user details by id",
+        responses={
+            200: {
+                "description": "successfully got user details",
+                "schema": user_schema
+            },
+            404: {
+                "description": "user not found",
+                "schema": message_schema
+            },
+        }
+    )
+    async def get(self):
+        pass
+
+    @request_schema(user_schema)
+    @response_schema(user_schema)
+    @docs(
+        tags=['admin'],
+        summary="Update all user details by id method",
+        description="This method is used to update all user details by id",
+        responses={
+            200: {
+                "description": "successfully updated user details",
+                "schema": user_schema
+            },
+            404: {
+                "description": "user not found",
+                "schema": message_schema
+            },
+        }
+    )
+    async def put(self):
+        pass
+
+    @request_schema(user_schema_partial)
+    @response_schema(user_schema)
+    @docs(
+        tags=['admin'],
+        summary="Update user details partially by id method",
+        description="This method is used to update particular user details by id",
+        responses={
+            200: {
+                "description": "successfully updated user details",
+                "schema": user_schema
+            },
+            404: {
+                "description": "user not found",
+                "schema": message_schema
+            },
+        }
+    )
+    async def patch(self):
+        pass
+
+    @response_schema(user_schema)
+    @docs(
+        tags=['admin'],
+        summary="Delete user by id method",
+        description="This method is used to delete user by id",
+        responses={
+            200: {
+                "description": "successfully deleted user",
+                "schema": user_schema
+            },
+            404: {
+                "description": "user not found",
+                "schema": message_schema
+            },
+        }
+    )
+    async def delete(self):
+        pass
+
+"""
+from aiohttp_rest_framework import views as rest_views
+from serializers import UserSerializer
+
+
+class UserListCreateView(rest_views.ListCreateAPIView):
+    serializer_class = UserSerializer
+
+
+class UserRetrieveUpdateDestroyView(rest_views.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+"""

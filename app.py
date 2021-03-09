@@ -16,7 +16,7 @@ async def init_app(argv=None):
     setup_routes(app)
     setup_aiohttp_apispec(
         app=app,
-        title="Profiles documentation",
+        title="Auth documentation",
         version="v1",
         url="/auth/v1/docs/swagger.json",
         swagger_path="/auth/v1/docs",
