@@ -16,7 +16,7 @@ RUN apk add --no-cache \
             libpq \
     && apk add --virtual .build-deps \
         build-base python3-dev postgresql-dev \
-    && pip install -r requirements.txt \
+    && pip install --no-cache-dir -r requirements.txt \
     && rm -rf /root/.cache/ \
     && chown -R $USER:$USER $APP_HOME \
     && apk del .build-deps
