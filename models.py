@@ -23,3 +23,4 @@ class User(Base):
     is_superuser = Column('is_superuser', Boolean(), default=False)
     created = Column('created', DateTime(timezone=True), server_default=func.now())
     last_login = Column('last_login', DateTime(timezone=True))
+    confirmed = Column('confirmed', Boolean, default=False)
