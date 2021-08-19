@@ -59,7 +59,7 @@ class UserRegister(web.View):
         }
     )
     async def post(self):
-        data = get_data_from_request(self.request)
+        data = await get_data_from_request(self.request)
         validated_data = register_user_schema.load(data)
 
         if validated_data.get('password') != validated_data.get('password2'):
@@ -68,6 +68,7 @@ class UserRegister(web.View):
         user_data = {
             'email': validated_data['email'],
             'password': await generate_password_hash(validated_data['password']),
+            'is_active': True
         }
 
         async with self.request.app['db'].acquire() as conn:
