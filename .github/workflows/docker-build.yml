@@ -1,11 +1,11 @@
 name: Build docker and push
 
-on:
-  workflow_run:
-    workflows: ["CI unittests"]
-    branches: [master]
-    types:
-      - completed
+on: {}
+#  workflow_run:
+#    workflows: ["CI unittests"]
+#    branches: [master]
+#    types:
+#      - completed
 
 
 jobs:
