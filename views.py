@@ -59,7 +59,7 @@ class UserRegister(web.View):
         }
     )
     async def post(self):
-        data = get_data_from_request(self.request)
+        data = await get_data_from_request(self.request)
         validated_data = register_user_schema.load(data)
 
         if validated_data.get('password') != validated_data.get('password2'):
