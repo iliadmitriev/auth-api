@@ -68,6 +68,7 @@ class UserRegister(web.View):
         user_data = {
             'email': validated_data['email'],
             'password': await generate_password_hash(validated_data['password']),
+            'is_active': True
         }
 
         async with self.request.app['db'].acquire() as conn:
