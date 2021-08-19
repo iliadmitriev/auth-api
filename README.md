@@ -30,10 +30,10 @@ secret key should be a random string which is keeped in secret
 4. create db instances (postgres, redis)
 ```shell
 docker run -d --name auth-redis --hostname auth-redis \
-    -p 6379:6379 redis:6.2.1-alpine3.13
+    -p 6379:6379 redis:6.2.5-alpine3.14
 
 docker run -d --name auth-postgres --hostname auth-postgres \
-    -p 5432:5432 --env-file .env postgres:13-alpine
+    -p 5432:5432 --env-file .env postgres:13.4-alpine3.14
 ```
 5. install pip modules from project requirements
 ```shell
@@ -69,6 +69,12 @@ curl -v --url http://localhost:8080/auth/v1/refresh \
  -F refresh_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3LCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJqdGkiOiIwMWVjNjRhOWZlZjc0ZWIwOWViMGI1YmY1NGViOWVjMSIsInRva2VuX3R5cGUiOiJyZWZyZXNoX3Rva2VuIiwiZXhwIjoxNjE1MzA0MDQ2fQ.QyRVKKkxRNcql84ri6HPcL78D348LOPKH_BmKGUdpFo
  ```
 
+# Testing
+
+Run tests with coverage
+```shell
+pytest -v --cov=. --cov-report=term-missing --cov-fail-under=50
+```
 
 # Docker
 
