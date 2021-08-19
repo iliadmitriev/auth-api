@@ -1,16 +1,15 @@
-from aiohttp.web_middlewares import middleware
+from json import JSONDecodeError
+
 from aiohttp import web
+from aiohttp.web_middlewares import middleware
+from aiohttp_jwt import JWTMiddleware
+from marshmallow import ValidationError
+
 from exceptions import (
     BadRequest,
-    RecordNotFound,
-    PasswordsDontMatch,
-    UserAlreadyExists,
     UserIsNotActivated,
-    RefreshTokenNotFound
+    NotFound
 )
-from json import JSONDecodeError
-from marshmallow import ValidationError
-from aiohttp_jwt import JWTMiddleware
 from settings import SECRET_KEY
 
 
@@ -41,13 +40,11 @@ async def error_middleware(request, handler):
             BadRequest,
             JSONDecodeError,
             ValidationError,
-            PasswordsDontMatch,
-            UserAlreadyExists
     ) as e:
         return await handle_http_error(request, e, status=400)
     except UserIsNotActivated as e:
         return await handle_http_error(request, e, status=403)
-    except (RefreshTokenNotFound, RecordNotFound) as e:
+    except NotFound as e:
         return await handle_http_error(request, e, status=404)
     except Exception as e:
         return await handle_http_error(request, e, status=500)
