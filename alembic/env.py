@@ -4,15 +4,8 @@ from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-import sys
-from pathlib import Path
-
-"""Path hack to make alembic imports work from project root directory"""
-BASE_PATH = Path(__file__).parent.parent
-sys.path.append(str(BASE_PATH.absolute()))
-from models import Base # noqa
-from settings import dsn # noqa
-
+from models import Base
+from settings import dsn
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
