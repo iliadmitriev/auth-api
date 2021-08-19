@@ -279,4 +279,3 @@ class UserDetailView(web.View):
     )
     async def delete(self):
         pass
-

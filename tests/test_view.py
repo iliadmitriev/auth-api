@@ -24,4 +24,3 @@ class UserRegistrationTestCase(AioHTTPTestCaseWithTestDB):
     async def test_auth_register_get_405(self):
         resp = await self.client.get('/auth/v1/register')
         assert resp.status == 405
-
