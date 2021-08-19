@@ -25,5 +25,3 @@ class UserAlreadyExists(BadRequest):
 
 class UserIsNotActivated(Exception):
     """User with given email address is not activated"""
-
-

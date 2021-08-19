@@ -1,7 +1,8 @@
 import aiopg.sa
-from exceptions import UserAlreadyExists, RecordNotFound
-from sqlalchemy.sql import select, update, insert, delete
 from psycopg2 import errors
+from sqlalchemy.sql import select, insert
+
+from exceptions import UserAlreadyExists, RecordNotFound
 
 
 async def init_pg(app):
@@ -27,11 +28,11 @@ async def create_user(conn, obj, values):
     try:
         result = await conn.execute(
             insert(obj)
-                .values(**values)
-                .returning(*obj.__table__.columns)
+            .values(**values)
+            .returning(*obj.__table__.columns)
         )
         record = await result.first()
-    except errors.UniqueViolation as e:
+    except errors.UniqueViolation:
         raise UserAlreadyExists('User with this email is already exists')
 
     return record
@@ -43,4 +44,3 @@ async def get_user_by_email(conn, obj, email):
     if not record:
         raise RecordNotFound(f'{obj.__name__} with email={email} is not found')
     return record
-
