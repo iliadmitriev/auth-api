@@ -1,0 +1,82 @@
+name: CI unittests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  POSTGRES_PASSWORD: secret
+  POSTGRES_USER: auth
+  POSTGRES_DB: auth
+  POSTGRES_HOST: 127.0.0.1
+  POSTGRES_PORT: 5432
+  SECRET_KEY: testsecretkey
+  REDIS_LOCATION: redis://192.168.10.1:6379/0
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    if: "!contains(github.event.head_commit.message, '#notest')"
+
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    services:
+      postgres:
+        image: postgres:13.4-alpine3.14
+        env:
+          POSTGRES_PASSWORD: secret
+          POSTGRES_USER: auth
+          POSTGRES_DB: auth
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:6.2.5-alpine3.14
+        options: >-
+          --health-cmd redis-cli ping
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install pip dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Create DB schemas
+      run: |
+        alembic upgrade head
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Pytest with Coverage 
+      run: |
+        pytest -v --cov=. --cov-report=term-missing --cov-fail-under=50
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
