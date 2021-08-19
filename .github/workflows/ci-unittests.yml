@@ -80,3 +80,25 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
+  prepare_tags:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare tags
+      id: prepare
+      run: |
+        TAGS=${{ github.repository }}:sha-${GITHUB_SHA:0:7}
+        if [[ $GITHUB_REF == refs/pull/* ]]; then
+          VERSION=pr-${{ github.event.pull_request.number }}-merge
+          TAGS="$TAGS,${{ github.repository }}:${VERSION}"
+        fi
+        if [[ $GITHUB_REF == ref/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+          TAGS="$TAGS,${{ github.repository }}:${VERSION}"
+        fi
+        if [[ $GITHUB_REF == ref/head/master ]]; then
+          VERSION=latest
+          TAGS="$TAGS,${{ github.repository }}:${VERSION}"
+        fi
+        echo "${TAGS}"
+        echo ::set-output name=tags::${TAGS}
