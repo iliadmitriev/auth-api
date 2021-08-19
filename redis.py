@@ -2,16 +2,13 @@ import aioredis
 
 
 async def init_redis(app):
-    pool = await aioredis.create_pool(
+    app['redis'] = aioredis.from_url(
         app['redis_location'],
-        minsize=5, maxsize=10)
-    app['redis'] = pool
+    )
 
 
 async def close_redis(app):
-    pool = app['redis']
-    pool.close()
-    await pool.wait_closed()
+    pass
 
 
 def setup_redis(app, redis_location):
@@ -21,15 +18,15 @@ def setup_redis(app, redis_location):
 
 
 async def get_redis_key(redis, key):
-    with await redis as conn:
-        val = await conn.execute('get', key)
+    async with redis.client() as conn:
+        val = await conn.get(key)
     return val
 
 
 async def set_redis_key(redis, key, value, expire=None):
-    with await redis as conn:
+    async with redis.client() as conn:
         if expire is None:
-            res = await conn.execute('set', key, value)
+            res = await conn.set(key, value)
         else:
-            res = await conn.execute('set', key, value, 'ex', expire)
+            res = await conn.set(key, value, ex=expire)
     return res

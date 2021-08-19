@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13
+FROM python:3.9-alpine3.14
 
 ENV PYTHONUNBUFFERED True
 
@@ -6,7 +6,7 @@ ENV APP_HOME /app
 
 ENV USER web-user
 
-RUN addgroup -S $USER && adduser -S $USER -G $USER
+RUN addgroup -S -g 1000 $USER && adduser -S -G $USER -u 1000 $USER
 
 WORKDIR $APP_HOME
 
@@ -16,16 +16,15 @@ RUN apk add --no-cache \
             libpq \
     && apk add --virtual .build-deps \
         build-base python3-dev postgresql-dev \
-    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir --ignore-installed six \
+        -r requirements.txt \
     && rm -rf /root/.cache/ \
     && chown -R $USER:$USER $APP_HOME \
     && apk del .build-deps
 
-COPY --chown=$USER . $APP_HOME/
+COPY --chown=$USER:$USER . $APP_HOME/
 
 USER $USER
-
-# there shoud be tests
 
 EXPOSE 8080
 
