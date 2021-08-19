@@ -81,7 +81,7 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
-  prepare_tags:
+  docker_build_and_push:
     needs:
       - unittests
     runs-on: ubuntu-latest
@@ -102,5 +102,6 @@ jobs:
           VERSION=latest
           TAGS="$TAGS,${{ github.repository }}:${VERSION}"
         fi
+        echo "$GITHUB_REF"
         echo "${TAGS}"
         echo ::set-output name=tags::${TAGS}
