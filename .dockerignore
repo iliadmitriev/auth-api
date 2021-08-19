@@ -3,6 +3,7 @@ __pycache__/
 /db.sqlite3
 /.idea
 /.coverage
+/.git
 /.env
 /venv
 /htmlcov

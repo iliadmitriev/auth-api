@@ -280,15 +280,3 @@ class UserDetailView(web.View):
     async def delete(self):
         pass
 
-"""
-from aiohttp_rest_framework import views as rest_views
-from serializers import UserSerializer
-
-
-class UserListCreateView(rest_views.ListCreateAPIView):
-    serializer_class = UserSerializer
-
-
-class UserRetrieveUpdateDestroyView(rest_views.RetrieveUpdateDestroyAPIView):
-    serializer_class = UserSerializer
-"""
