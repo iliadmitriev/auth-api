@@ -25,7 +25,7 @@ class AioHTTPTestCaseWithTestDB(AioHTTPTestCase):
         return app
 
 
-class UserRegistrationTestCase(AioHTTPTestCaseWithTestDB):
+class AuthTestCase(AioHTTPTestCaseWithTestDB):
     async def _create_user(self, data):
         user_data = {
             'email': data.get('email'),

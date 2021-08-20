@@ -13,7 +13,7 @@ env:
   POSTGRES_HOST: 127.0.0.1
   POSTGRES_PORT: 5432
   SECRET_KEY: testsecretkey
-  REDIS_LOCATION: redis://192.168.10.1:6379/0
+  REDIS_LOCATION: redis://127.0.0.1:6379/0
 
 
 jobs:
