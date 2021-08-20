@@ -1,5 +1,5 @@
 __pycache__/
-/.pytest_cache
+.pytest_cache/
 /db.sqlite3
 /.idea
 /.coverage
@@ -8,3 +8,4 @@ __pycache__/
 /venv
 /htmlcov
 .DS_Store
+/.github
