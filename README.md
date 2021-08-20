@@ -76,7 +76,7 @@ curl -v --url http://localhost:8080/auth/v1/refresh \
 
 Run tests with coverage
 ```shell
-pytest -v --cov=. --cov-report=term-missing --cov-fail-under=50
+pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
 ```
 
 # Docker
