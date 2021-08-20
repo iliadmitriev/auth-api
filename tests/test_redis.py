@@ -111,7 +111,7 @@ async def test_set_redis_key_with_expire_py_3_7():
 
 
 @pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
-async def test_set_redis_key_with_expire_py_3_7():
+async def test_set_redis_key_without_expire_py_3_7():
     redis = mock.MagicMock()
     redis.client.return_value = AMagicMock()
     res = await get_redis_key(redis=redis, key='test key')
