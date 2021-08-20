@@ -10,7 +10,7 @@ from middlewares import setup_middlewares
 from settings import dsn, access_log_format, APP_PORT, APP_HOST, redis_location
 
 
-async def init_app(argv=None):
+def init_app(argv=None):
     app = web.Application()
 
     setup_routes(app)
@@ -40,5 +40,5 @@ def main(argv):
     )
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main(sys.argv[1:])
