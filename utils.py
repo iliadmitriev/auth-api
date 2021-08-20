@@ -68,12 +68,14 @@ async def decode_token(token):
 
 async def get_refresh_token(token):
     token['jti'] = uuid4().hex
-    access_token = token | {
+    access_token = {
+        **token,
         'token_type': 'access_token',
         'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
     }
 
-    refresh_token = token | {
+    refresh_token = {
+        **token,
         'token_type': 'refresh_token',
     }
 
