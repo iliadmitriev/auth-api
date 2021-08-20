@@ -84,8 +84,10 @@ async def test_get_redis_key():
 class AMagicMock(MagicMock):
     async def __aenter__(self):
         val = mock.MagicMock()
-        val.return_value.set.return_value = Future()
-        val.return_value.set.return_value.set_result(True)
+        f = Future()
+        f.set_result(True)
+        val.set = MagicMock(return_value=f)
+        val.get = MagicMock(return_value=f)
         return val
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
