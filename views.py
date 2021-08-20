@@ -4,6 +4,8 @@ from aiohttp_apispec import (
     request_schema,
     response_schema
 )
+from aiohttp_jwt import login_required, check_permissions, match_any
+
 from models import User
 from exceptions import (
     PasswordsDontMatch,
@@ -181,8 +183,10 @@ class UserListView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def get(self):
-        pass
+        return web.json_response((), status=200)
 
     @request_schema(user_schema)
     @response_schema(user_schema)
@@ -197,8 +201,10 @@ class UserListView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def post(self):
-        pass
+        return web.json_response({}, status=200)
 
 
 class UserDetailView(web.View):
@@ -218,8 +224,10 @@ class UserDetailView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def get(self):
-        pass
+        return web.json_response({}, status=200)
 
     @request_schema(user_schema)
     @response_schema(user_schema)
@@ -238,8 +246,10 @@ class UserDetailView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def put(self):
-        pass
+        return web.json_response({}, status=200)
 
     @request_schema(user_schema_partial)
     @response_schema(user_schema)
@@ -258,8 +268,10 @@ class UserDetailView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def patch(self):
-        pass
+        return web.json_response({}, status=200)
 
     @response_schema(user_schema)
     @docs(
@@ -277,5 +289,7 @@ class UserDetailView(web.View):
             },
         }
     )
+    @login_required
+    @check_permissions('admin', 'scope', comparison=match_any)
     async def delete(self):
-        pass
+        return web.json_response({}, status=200)
