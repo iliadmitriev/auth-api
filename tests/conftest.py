@@ -9,7 +9,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy import create_engine
 
 from models import Base
-from settings import dsn, conf
+from settings import dsn, conf, redis_location
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
 sys.path.append(BASE_PATH)
@@ -56,5 +56,7 @@ def create_and_migrate_test_db_dsn():
 def get_dsn(request):
     test_dsn, test_db = create_and_migrate_test_db_dsn()
     request.cls.dsn = test_dsn
+    request.cls.redis_location = redis_location
     yield test_dsn
     drop_test_db(test_db)
+
