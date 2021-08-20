@@ -1,6 +1,9 @@
 import asyncio
+import sys
 from unittest import mock
 from unittest.mock import MagicMock
+
+import pytest
 
 from redis import init_redis, close_redis, setup_redis, set_redis_key, get_redis_key
 
@@ -50,6 +53,7 @@ def test_setup_redis():
     app.on_cleanup.append.assert_called_once_with(close_redis)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 async def test_set_redis_key():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.set.return_value = True
@@ -58,6 +62,7 @@ async def test_set_redis_key():
     assert res
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 async def test_set_redis_key_with_expire():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.set.return_value = True
@@ -66,9 +71,52 @@ async def test_set_redis_key_with_expire():
     assert res
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 async def test_get_redis_key():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.get.return_value = True
     res = await get_redis_key(redis=redis, key='test key')
     redis.client.return_value.__aenter__.return_value.get.assert_called_once_with('test key')
+    assert res
+
+
+@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
+async def test_set_redis_key_py_3_7():
+    class AMagicMock(MagicMock):
+        async def __aenter__(self):
+            val = mock.MagicMock()
+            val.return_value.set.return_value = True
+            return val
+
+    redis = mock.MagicMock()
+    redis.client.return_value = AMagicMock()
+    res = await set_redis_key(redis=redis, key='test key', value='test value')
+    assert res
+
+
+@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
+async def test_set_redis_key_with_expire_py_3_7():
+    class AMagicMock(MagicMock):
+        async def __aenter__(self):
+            val = mock.MagicMock()
+            val.return_value.set.return_value = True
+            return val
+
+    redis = mock.MagicMock()
+    redis.client.return_value = AMagicMock()
+    res = await set_redis_key(redis=redis, key='test key', value='test value', expire=1000)
+    assert res
+
+
+@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
+async def test_get_redis_key_py_3_7():
+    class AMagicMock(MagicMock):
+        async def __aenter__(self):
+            val = mock.MagicMock()
+            val.return_value.set.return_value = True
+            return val
+
+    redis = mock.MagicMock()
+    redis.client.return_value = AMagicMock()
+    res = await get_redis_key(redis=redis, key='test key')
     assert res
