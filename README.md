@@ -1,5 +1,8 @@
 # auth-api
 
+[![CI unittests](https://github.com/iliadmitriev/auth-api/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/iliadmitriev/auth-api/actions/workflows/ci-unittests.yml)
+[![codecov](https://codecov.io/gh/iliadmitriev/auth-api/branch/master/graph/badge.svg?token=RF1H05TVCH)](https://codecov.io/gh/iliadmitriev/auth-api)
+
 New realization of https://github.com/iliadmitriev/auth
 started from a scratch
 

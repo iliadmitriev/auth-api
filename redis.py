@@ -8,7 +8,7 @@ async def init_redis(app):
 
 
 async def close_redis(app):
-    pass
+    await app['redis'].close()
 
 
 def setup_redis(app, redis_location):

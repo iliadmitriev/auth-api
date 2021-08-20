@@ -13,7 +13,7 @@ env:
   POSTGRES_HOST: 127.0.0.1
   POSTGRES_PORT: 5432
   SECRET_KEY: testsecretkey
-  REDIS_LOCATION: redis://192.168.10.1:6379/0
+  REDIS_LOCATION: redis://127.0.0.1:6379/0
 
 
 jobs:
@@ -75,7 +75,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Pytest with Coverage 
       run: |
-        pytest -v --cov=. --cov-report=term-missing --cov-fail-under=50
+        pytest -v --cov=. --cov-report=term-missing --cov-fail-under=88
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
