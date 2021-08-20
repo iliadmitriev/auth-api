@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from asyncio import Future
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -83,7 +84,8 @@ async def test_get_redis_key():
 class AMagicMock(MagicMock):
     async def __aenter__(self):
         val = mock.MagicMock()
-        val.return_value.set.return_value = True
+        val.return_value.set.return_value = Future()
+        val.return_value.set.return_value.set_result(True)
         return val
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -92,7 +94,6 @@ class AMagicMock(MagicMock):
 
 @pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
 async def test_set_redis_key_py_3_7():
-
     redis = mock.MagicMock()
     redis.client.return_value = AMagicMock()
     res = await set_redis_key(redis=redis, key='test key', value='test value')
