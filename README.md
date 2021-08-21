@@ -29,7 +29,7 @@ _EOF_
 export $(cat .env | xargs)
 
 ```
-secret key should be a random string which is keeped in secret
+secret key should be a random string which is kept in secret
 4. create db instances (postgres, redis)
 ```shell
 docker run -d --name auth-redis --hostname auth-redis \
@@ -92,4 +92,34 @@ docker build -t auth_api ./
 ```shell
 docker run -d -p 8080:8080 --name auth-api \
   --hostname auth-api --env-file .env auth_api
+```
+
+# Docker-compose
+
+1. create `.env` file with environment variables and export them to shell
+```shell
+cat > .env << _EOF_
+SECRET_KEY=testsecretkey
+POSTGRES_HOST=auth-postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=auth
+POSTGRES_USER=auth
+POSTGRES_PASSWORD=authsecret
+REDIS_LOCATION=redis://auth-redis:6379/0
+_EOF_
+```
+
+2. pull, build and run
+```shell
+docker-compose up -d
+```
+
+3. apply migrations
+```shell
+docker-compose exec api alembic upgrade head
+```
+
+full cleanup
+```shell
+docker-compose down --volumes --remove-orphans --rmi all
 ```
