@@ -69,7 +69,7 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         assert isinstance(response_json, list)
 
     @unittest_run_loop
-    async def test_user_list_view_post_OK(self):
+    async def test_user_list_view_post_add_user(self):
         credentials, _ = await self._user_authorize_jwt(
             {
                 'email': 'test_user_post_jwt_email@example.com',
@@ -83,10 +83,51 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
                 'Content-Type': 'application/json',
                 'Authorization': f'Bearer {credentials["access_token"]}'
             },
+            data=json.dumps({
+                'password': '321123',
+                'is_superuser': True,
+                'confirmed': True,
+                'is_active': True,
+                'email': 'a_newly_add_super_user2@example.com'
+            })
         )
-        assert response.status == 200
         response_json = json.loads(await response.text())
+        assert response.status == 201
         assert isinstance(response_json, dict)
+        assert 'password' not in response_json
+        assert 'id' in response_json
+        assert 'email' in response_json
+
+        response = await self.client.post(
+            '/auth/v1/users',
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {credentials["access_token"]}'
+            },
+            data=json.dumps({
+                'is_superuser': True,
+                'confirmed': True,
+                'is_active': True,
+                'email': 'a_newly_add_super_user3@example.com'
+            })
+        )
+        assert response.status == 400
+
+        response = await self.client.post(
+            '/auth/v1/users',
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {credentials["access_token"]}'
+            },
+            data=json.dumps({
+                'password': '321123',
+                'is_superuser': True,
+                'confirmed': True,
+                'is_active': True,
+                'email': 'a_newly_add_super_user2@example.com'
+            })
+        )
+        assert response.status == 400
 
     @unittest_run_loop
     async def test_user_detail_view_OK(self):
@@ -147,7 +188,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         assert response.status == 200
         response_json = json.loads(await response.text())
         assert isinstance(response_json, dict)
-
 
     @unittest_run_loop
     async def test_user_delete_patch_view_OK(self):

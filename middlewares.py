@@ -40,6 +40,7 @@ async def error_middleware(request, handler):
             BadRequest,
             JSONDecodeError,
             ValidationError,
+            KeyError
     ) as e:
         return await handle_http_error(request, e, status=400)
     except UserIsNotActivated as e:
