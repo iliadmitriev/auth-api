@@ -60,7 +60,8 @@ class UserSchema(SQLAlchemyAutoSchema):
 
     id = auto_field(dump_only=True)
     created = auto_field(dump_only=True)
-    password = auto_field(dump_only=True)
+    password = auto_field(load_only=True)
+    last_login = auto_field(dump_only=True)
     email = auto_field(
         'email',
         validate=validate.Email()

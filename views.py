@@ -6,24 +6,17 @@ from aiohttp_apispec import (
 )
 from aiohttp_jwt import login_required, check_permissions, match_any
 
-from models import User
+from db import (
+    create_user,
+    get_user_by_email, get_objects, insert_object
+)
 from exceptions import (
     PasswordsDontMatch,
     RecordNotFound,
     UserIsNotActivated,
     RefreshTokenNotFound
 )
-from utils import (
-    generate_password_hash,
-    get_data_from_request,
-    gen_token_for_user,
-    decode_token,
-    get_refresh_token
-)
-from db import (
-    create_user,
-    get_user_by_email
-)
+from models import User
 from redis import (
     get_redis_key,
     set_redis_key
@@ -40,6 +33,21 @@ from schemas import (
     user_schema_partial
 )
 from settings import JWT_EXP_REFRESH_SECONDS
+from utils import (
+    generate_password_hash,
+    get_data_from_request,
+    gen_token_for_user,
+    decode_token,
+    get_refresh_token
+)
+
+default_parameters = [{
+    'in': 'header',
+    'name': 'Authorization',
+    'type': 'string',
+    'format': 'Bearer',
+    'required': 'true'
+}]
 
 
 class UserRegister(web.View):
@@ -176,6 +184,7 @@ class UserListView(web.View):
         tags=['admin'],
         summary="Get list of users method",
         description="This method is used to get all users from db",
+        parameters=default_parameters,
         responses={
             200: {
                 "description": "successfully got users list",
@@ -186,7 +195,10 @@ class UserListView(web.View):
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
     async def get(self):
-        return web.json_response((), status=200)
+        async with self.request.app['db'].acquire() as conn:
+            profiles = await get_objects(conn, User)
+            result = users_schema.dump(profiles, many=True)
+            return web.json_response(result)
 
     @request_schema(user_schema)
     @response_schema(user_schema)
@@ -194,8 +206,9 @@ class UserListView(web.View):
         tags=['admin'],
         summary="Create a new user method",
         description="This method is used to create a new user",
+        parameters=default_parameters,
         responses={
-            200: {
+            201: {
                 "description": "successfully created user",
                 "schema": user_schema
             },
@@ -204,7 +217,14 @@ class UserListView(web.View):
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
     async def post(self):
-        return web.json_response({}, status=200)
+        async with self.request.app['db'].acquire() as conn:
+            data = await get_data_from_request(self.request)
+            validated_data = user_schema.load(data)
+            if 'password' in validated_data:
+                validated_data['password'] = await generate_password_hash(validated_data['password'])
+            user = await insert_object(conn, User, validated_data)
+            result = user_schema.dump(user)
+            return web.json_response(result, status=201)
 
 
 class UserDetailView(web.View):
@@ -216,7 +236,7 @@ class UserDetailView(web.View):
         responses={
             200: {
                 "description": "successfully got user details",
-                "schema": user_schema
+                "schema": users_schema
             },
             404: {
                 "description": "user not found",
