@@ -1,10 +1,5 @@
-from views import (
-    UserRegister,
-    UserLogin,
-    RefreshToken,
-    UserListView,
-    UserDetailView
-)
+from views.auth import UserRegister, UserLogin, RefreshToken
+from views.users import UserListView, UserDetailView
 
 
 def setup_routes(app):

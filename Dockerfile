@@ -28,4 +28,4 @@ USER $USER
 
 EXPOSE 8080
 
-CMD ["python3","/app/app.py"]
+CMD ["python3","/app/main.py"]

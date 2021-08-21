@@ -4,12 +4,12 @@ import pytest
 from aiohttp import web
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 
-from db import setup_db, create_user
-from redis import setup_redis
-from middlewares import setup_middlewares
-from models import User
-from routes import setup_routes
-from utils import generate_password_hash, decode_token
+from app.middlewares import setup_middlewares
+from backends.db import setup_db, create_user
+from backends.redis import setup_redis
+from helpers.utils import generate_password_hash, decode_token
+from models.users import User
+from routes.auth import setup_routes
 
 
 @pytest.mark.usefixtures('get_dsn')

@@ -5,12 +5,12 @@ from aiohttp.web_middlewares import middleware
 from aiohttp_jwt import JWTMiddleware
 from marshmallow import ValidationError
 
-from errors import (
+from helpers.errors import (
     BadRequest,
     UserIsNotActivated,
     NotFound
 )
-from settings import SECRET_KEY
+from app.settings import SECRET_KEY
 
 
 async def handle_http_error(request, e, status):

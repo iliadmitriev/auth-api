@@ -8,8 +8,8 @@ from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy import create_engine
 
-from models import Base
-from settings import dsn, conf, redis_location
+from app.settings import dsn, conf, redis_location
+from models.users import Base
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
 sys.path.append(BASE_PATH)
