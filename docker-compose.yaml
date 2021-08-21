@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:6.2-alpine3.14
+    hostname: auth-redis
+    networks:
+      - auth
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:13.4-alpine3.14
+    hostname: auth-postgres
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - auth
+    healthcheck:
+      test: pg_isready -U auth
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: auth-api
+    hostname: auth-api
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - auth
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+#    command: >
+#      sh -c "
+#        alembic upgrade head &&
+#        python3 app.py
+#      "
+
+volumes:
+  pgdata: {}
+  redisdata: {}
+
+networks:
+  auth:
+    name: auth-network
