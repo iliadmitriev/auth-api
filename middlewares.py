@@ -5,7 +5,7 @@ from aiohttp.web_middlewares import middleware
 from aiohttp_jwt import JWTMiddleware
 from marshmallow import ValidationError
 
-from exceptions import (
+from errors import (
     BadRequest,
     UserIsNotActivated,
     NotFound
