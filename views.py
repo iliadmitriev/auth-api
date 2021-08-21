@@ -10,7 +10,7 @@ from db import (
     create_user,
     get_user_by_email, get_objects, insert_object
 )
-from exceptions import (
+from errors import (
     PasswordsDontMatch,
     RecordNotFound,
     UserIsNotActivated,

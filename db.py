@@ -2,7 +2,7 @@ import aiopg.sa
 from psycopg2 import errors
 from sqlalchemy.sql import select, insert
 
-from exceptions import UserAlreadyExists, RecordNotFound, BadRequest
+from errors import UserAlreadyExists, RecordNotFound, BadRequest
 
 
 async def init_pg(app):
