@@ -13,6 +13,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 64m
 
   postgres:
     image: postgres:13.4-alpine3.14
@@ -28,6 +33,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128m
 
   api:
     build:
@@ -41,6 +51,11 @@ services:
       - "8080:8080"
     networks:
       - auth
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 128m
     depends_on:
       redis:
         condition: service_healthy
