@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from redis import init_redis, close_redis, setup_redis, set_redis_key, get_redis_key
+from backends.redis import init_redis, close_redis, setup_redis, set_redis_key, get_redis_key
 
 
 async def test_init_redis():

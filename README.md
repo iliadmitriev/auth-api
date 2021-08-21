@@ -46,6 +46,10 @@ pip install -r requirements.txt
 ```shell
 alembic upgrade head
 ```
+7. run
+```shell
+python3 main.py
+```
 
 
 # How to use

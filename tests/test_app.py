@@ -2,7 +2,8 @@ from logging import Logger
 
 from aiohttp.web_urldispatcher import UrlDispatcher
 
-from app import main, init_app
+from app import init_app
+from main import main
 from unittest import mock
 
 

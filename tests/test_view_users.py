@@ -1,16 +1,11 @@
 import json
 
-import pytest
-from aiohttp import web
-from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aiohttp.test_utils import unittest_run_loop
 
-from db import setup_db, create_user
-from middlewares import setup_middlewares
-from models import User
-from redis import setup_redis
-from routes import setup_routes
+from backends.db import create_user
+from helpers.utils import generate_password_hash
+from models.users import User
 from tests.test_view import AioHTTPTestCaseWithTestDB
-from utils import generate_password_hash
 
 
 class UserTestCase(AioHTTPTestCaseWithTestDB):

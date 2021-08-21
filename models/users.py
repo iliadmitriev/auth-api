@@ -1,13 +1,5 @@
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, Column, Integer, String, Boolean, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    DateTime,
-    Boolean
-)
 
 Base = declarative_base()
 metadata = MetaData()

@@ -1,7 +1,7 @@
 import pathlib
 from os import environ as env
 
-BASE_PATH = pathlib.Path(__file__).parent
+BASE_PATH = pathlib.Path(__file__).parent.parent
 
 APP_PORT = env.get('APP_PORT', 8080)
 APP_HOST = env.get('APP_HOST', '0.0.0.0')

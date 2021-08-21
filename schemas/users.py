@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models import User
+
+from models.users import User
 
 
 class RegisterUserSchema(Schema):

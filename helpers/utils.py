@@ -2,7 +2,7 @@ import hashlib
 from datetime import datetime, timedelta
 import jwt
 from base64 import b64encode
-from settings import (
+from app.settings import (
     SECRET_KEY,
     JWT_ALGORITHM,
     JWT_EXP_ACCESS_SECONDS,
