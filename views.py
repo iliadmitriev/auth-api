@@ -220,8 +220,7 @@ class UserListView(web.View):
         async with self.request.app['db'].acquire() as conn:
             data = await get_data_from_request(self.request)
             validated_data = user_schema.load(data)
-            if 'password' in validated_data:
-                validated_data['password'] = await generate_password_hash(validated_data['password'])
+            validated_data['password'] = await generate_password_hash(validated_data['password'])
             user = await insert_object(conn, User, validated_data)
             result = user_schema.dump(user)
             return web.json_response(result, status=201)
