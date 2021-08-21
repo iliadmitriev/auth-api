@@ -118,3 +118,8 @@ docker-compose up -d
 ```shell
 docker-compose exec api alembic upgrade head
 ```
+
+full cleanup
+```shell
+docker-compose down --volumes --remove-orphans --rmi all
+```
