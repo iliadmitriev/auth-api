@@ -4,7 +4,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.users import User
 
 
-class RegisterUserSchema(Schema):
+class RegistrationSchema(Schema):
     password = fields.String(
         required=True,
         validate=validate.Length(max=100)
@@ -22,7 +22,7 @@ class RegisterUserSchema(Schema):
         strict = True
 
 
-class LoginUserSchema(Schema):
+class LoginSchema(Schema):
     email = fields.String(
         required=True,
         validate=validate.Email()
@@ -85,9 +85,9 @@ class Message(Schema):
     )
 
 
-register_user_schema = RegisterUserSchema()
-login_user_schema = LoginUserSchema()
-registered_user_schema = RegisteredUser()
+registration_schema = RegistrationSchema()
+login_schema = LoginSchema()
+registered_user_schema = UserSchema()
 user_schema = UserSchema()
 user_schema_partial = UserSchema(partial=True)
 users_schema = UserSchema(many=True)
