@@ -55,6 +55,8 @@ python3 main.py
 # How to use
 
 Read api documentation http://localhost:8080/auth/v1/docs
+
+## With curl
 1. Register user 
 ```shell
 curl -v -F password=321123 -F password2=321123 -F email=user@example.com \
@@ -75,6 +77,32 @@ refresh_token - is needed to refresh access token (it expires in 24 hours)
 curl -v --url http://localhost:8080/auth/v1/refresh \
  -F refresh_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3LCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJqdGkiOiIwMWVjNjRhOWZlZjc0ZWIwOWViMGI1YmY1NGViOWVjMSIsInRva2VuX3R5cGUiOiJyZWZyZXNoX3Rva2VuIiwiZXhwIjoxNjE1MzA0MDQ2fQ.QyRVKKkxRNcql84ri6HPcL78D348LOPKH_BmKGUdpFo
  ```
+
+## With HTTPie
+
+install [HTTPie](https://github.com/httpie/httpie), [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth),
+[jq](https://github.com/stedolan/jq)
+
+1. set login and password to environment variables
+```shell
+AUTH_EMAIL=admin@example.com
+AUTH_PASS=321123
+```
+
+2. Login and get refresh token (expires in 24h)
+```shell
+REFRESH_TOKEN=$(http :8080/auth/v1/login email=$AUTH_EMAIL password=$AUTH_PASS | jq --raw-output '.refresh_token')
+```
+
+3. Using refresh token, get an access token(expires in 5 min, repeat step 3 in 5 min)
+```shell
+ACCESS_TOKEN=$(http :8080/auth/v1/refresh refresh_token=$REFRESH_TOKEN | jq --raw-output '.access_token') 
+```
+
+4. Make request to users api with access token
+```shell
+http -v -A jwt -a $ACCESS_TOKEN :8080/auth/v1/users
+```
 
 # Testing
 
