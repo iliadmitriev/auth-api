@@ -8,12 +8,12 @@ from helpers.errors import PasswordsDontMatch, RecordNotFound, UserIsNotActivate
 from helpers.utils import get_data_from_request, generate_password_hash, gen_token_for_user, decode_token, \
     get_refresh_token
 from models.users import User
-from schemas.users import register_user_schema, login_user_schema, registered_user_schema, user_schema, token_schema, \
+from schemas.users import registration_schema, login_schema, registered_user_schema, user_schema, token_schema, \
     refresh_token_schema, message_schema
 
 
 class UserRegister(web.View):
-    @request_schema(register_user_schema)
+    @request_schema(registration_schema)
     @response_schema(registered_user_schema)
     @docs(
         tags=['user'],
@@ -32,7 +32,7 @@ class UserRegister(web.View):
     )
     async def post(self):
         data = await get_data_from_request(self.request)
-        validated_data = register_user_schema.load(data)
+        validated_data = registration_schema.load(data)
 
         if validated_data.get('password') != validated_data.get('password2'):
             raise PasswordsDontMatch('Fields password and password2 don\'t match')
@@ -51,7 +51,7 @@ class UserRegister(web.View):
 
 
 class UserLogin(web.View):
-    @request_schema(login_user_schema)
+    @request_schema(login_schema)
     @response_schema(token_schema)
     @docs(
         tags=['user'],
@@ -79,7 +79,7 @@ class UserLogin(web.View):
     )
     async def post(self):
         data = await get_data_from_request(self.request)
-        validated_data = login_user_schema.load(data)
+        validated_data = login_schema.load(data)
 
         async with self.request.app['db'].acquire() as conn:
             user = await get_user_by_email(conn, User, validated_data['email'])

@@ -7,21 +7,17 @@ from helpers.utils import get_data_from_request, generate_password_hash
 from models.users import User
 from schemas.users import user_schema, user_schema_partial, users_schema, message_schema
 from views.helpers.params import default_parameters
+from views.helpers.responses import responses_default, response_400, response_404
 
 
 class UserListView(web.View):
-    @response_schema(users_schema)
+    @response_schema(users_schema, 200, description="successfully got users list")
     @docs(
         tags=['admin'],
         summary="Get list of users method",
         description="This method is used to get all users from db",
         parameters=default_parameters,
-        responses={
-            200: {
-                "description": "successfully got users list",
-                "schema": users_schema
-            },
-        }
+        responses=responses_default
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
@@ -32,18 +28,13 @@ class UserListView(web.View):
             return web.json_response(result)
 
     @request_schema(user_schema)
-    @response_schema(user_schema)
+    @response_schema(user_schema, 201, description="successfully created user")
     @docs(
         tags=['admin'],
         summary="Create a new user method",
         description="This method is used to create a new user",
         parameters=default_parameters,
-        responses={
-            201: {
-                "description": "successfully created user",
-                "schema": user_schema
-            },
-        }
+        responses={**responses_default, **response_400}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
@@ -58,22 +49,13 @@ class UserListView(web.View):
 
 
 class UserDetailView(web.View):
-    @response_schema(user_schema)
+    @response_schema(user_schema, 200, description="successfully got user details")
     @docs(
         tags=['admin'],
         summary="Get user by id method",
         description="This method is used to get user details by id",
         parameters=default_parameters,
-        responses={
-            200: {
-                "description": "successfully got user details",
-                "schema": users_schema
-            },
-            404: {
-                "description": "user not found",
-                "schema": message_schema
-            },
-        }
+        responses={**responses_default, **response_400}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
@@ -81,22 +63,13 @@ class UserDetailView(web.View):
         return web.json_response({}, status=200)
 
     @request_schema(user_schema)
-    @response_schema(user_schema)
+    @response_schema(user_schema, 200, description="successfully updated user details", )
     @docs(
         tags=['admin'],
         summary="Update all user details by id method",
         description="This method is used to update all user details by id",
         parameters=default_parameters,
-        responses={
-            200: {
-                "description": "successfully updated user details",
-                "schema": user_schema
-            },
-            404: {
-                "description": "user not found",
-                "schema": message_schema
-            },
-        }
+        responses={**responses_default, **response_400, **response_404}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
@@ -104,44 +77,26 @@ class UserDetailView(web.View):
         return web.json_response({}, status=200)
 
     @request_schema(user_schema_partial)
-    @response_schema(user_schema)
+    @response_schema(user_schema, 200, description="successfully updated user details")
     @docs(
         tags=['admin'],
         summary="Update user details partially by id method",
         description="This method is used to update particular user details by id",
         parameters=default_parameters,
-        responses={
-            200: {
-                "description": "successfully updated user details",
-                "schema": user_schema
-            },
-            404: {
-                "description": "user not found",
-                "schema": message_schema
-            },
-        }
+        responses={**responses_default, **response_400, **response_404}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)
     async def patch(self):
         return web.json_response({}, status=200)
 
-    @response_schema(user_schema)
+    @response_schema(user_schema, 200, description="successfully deleted user")
     @docs(
         tags=['admin'],
         summary="Delete user by id method",
         description="This method is used to delete user by id",
         parameters=default_parameters,
-        responses={
-            200: {
-                "description": "successfully deleted user",
-                "schema": user_schema
-            },
-            404: {
-                "description": "user not found",
-                "schema": message_schema
-            },
-        }
+        responses={**responses_default, **response_404}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)

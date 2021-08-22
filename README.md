@@ -78,10 +78,25 @@ curl -v --url http://localhost:8080/auth/v1/refresh \
 
 # Testing
 
-Run tests with coverage
+### Run tests
+```shell
+pytest -v --cov=.
+```
+
+### Run tests with coverage
 ```shell
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
 ```
+
+### Run tests with html report
+```shell
+# run tests and generate report
+pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=html
+
+# open report
+open htmlcov/index.html 
+```
+
 
 # Docker
 
