@@ -55,7 +55,7 @@ class UserDetailView(web.View):
         summary="Get user by id method",
         description="This method is used to get user details by id",
         parameters=default_parameters,
-        responses={**responses_default, **response_400}
+        responses={**responses_default, **response_404}
     )
     @login_required
     @check_permissions('admin', 'scope', comparison=match_any)

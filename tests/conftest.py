@@ -59,4 +59,3 @@ def get_dsn(request):
     request.cls.redis_location = redis_location
     yield test_dsn
     drop_test_db(test_db)
-
