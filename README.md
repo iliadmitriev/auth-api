@@ -3,7 +3,6 @@
 [![CI unittests](https://github.com/iliadmitriev/auth-api/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/iliadmitriev/auth-api/actions/workflows/ci-unittests.yml)
 [![codecov](https://codecov.io/gh/iliadmitriev/auth-api/branch/master/graph/badge.svg?token=RF1H05TVCH)](https://codecov.io/gh/iliadmitriev/auth-api)
 [![CodeFactor](https://www.codefactor.io/repository/github/iliadmitriev/auth-api/badge)](https://www.codefactor.io/repository/github/iliadmitriev/auth-api)
-[![Known Vulnerabilities](https://snyk.io/test/github/iliadmitriev/auth-api/badge.svg)](https://snyk.io/test/github/iliadmitriev/auth-api)
 [![Documentation Status](https://readthedocs.org/projects/auth-api/badge/?version=latest)](https://auth-api.readthedocs.io/en/latest/?badge=latest)
 
 
