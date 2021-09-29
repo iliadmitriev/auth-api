@@ -5,9 +5,24 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/iliadmitriev/auth-api/badge)](https://www.codefactor.io/repository/github/iliadmitriev/auth-api)
 [![Documentation Status](https://readthedocs.org/projects/auth-api/badge/?version=latest)](https://auth-api.readthedocs.io/en/latest/?badge=latest)
 
+JWT auth service for educational purposes. It's build using aiohttp, psycopg2, aioredis, SQLAlchemy, alembic, marshmallow, PyJWT, pytest 
 
 New realization of https://github.com/iliadmitriev/auth
 started from a scratch
+
+# Contents
+- [installation](#installation)
+- [How to use](#how-to-use)
+  * [With curl](#with-curl)
+  * [With HTTPie](#with-httpie)
+- [Testing](#testing)
+    + [Run tests](#run-tests)
+    + [Run tests with coverage](#run-tests-with-coverage)
+    + [Run tests with html report](#run-tests-with-html-report)
+- [Docker](#docker)
+  * [Build](#build)
+  * [Run](#run)
+- [Docker-compose](#docker-compose)
 
 # installation
 
