@@ -8,7 +8,7 @@ apispec==3.3.2
 async-timeout==3.0.1
 attrs==21.2.0
 chardet==4.0.0
-coverage==5.5
+coverage==6.0.1
 hiredis==2.0.0
 idna==3.2
 iniconfig==1.1.1
