@@ -17,7 +17,7 @@ Mako==1.1.5
 MarkupSafe==2.0.1
 marshmallow==3.13.0
 marshmallow-sqlalchemy==0.24.2
-multidict==5.1.0
+multidict==5.2.0
 packaging==21.0
 pluggy==0.13.1
 psycopg2==2.9.1
