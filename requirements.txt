@@ -8,7 +8,7 @@ apispec==3.3.2
 async-timeout==3.0.1
 attrs==21.2.0
 chardet==4.0.0
-coverage==6.0.1
+coverage==6.0.2
 hiredis==2.0.0
 idna==3.2
 iniconfig==1.1.1
@@ -17,7 +17,7 @@ Mako==1.1.5
 MarkupSafe==2.0.1
 marshmallow==3.13.0
 marshmallow-sqlalchemy==0.24.2
-multidict==5.1.0
+multidict==5.2.0
 packaging==21.0
 pluggy==0.13.1
 psycopg2==2.9.1
@@ -36,4 +36,4 @@ SQLAlchemy==1.4.23
 toml==0.10.2
 typing-extensions==3.10.0.2
 webargs==5.5.3
-yarl==1.6.3
+yarl==1.7.0
