@@ -36,4 +36,4 @@ SQLAlchemy==1.4.23
 toml==0.10.2
 typing-extensions==3.10.0.2
 webargs==5.5.3
-yarl==1.6.3
+yarl==1.7.0
