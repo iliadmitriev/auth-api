@@ -30,7 +30,7 @@ pytest-aiohttp==0.3.0
 pytest-cov==3.0.0
 python-dateutil==2.8.2
 python-editor==1.0.4
-PyYAML==5.4.1
+PyYAML==6.0
 six==1.16.0
 SQLAlchemy==1.4.25
 toml==0.10.2
