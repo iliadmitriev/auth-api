@@ -10,7 +10,7 @@ attrs==21.2.0
 chardet==4.0.0
 coverage==6.0.2
 hiredis==2.0.0
-idna==3.2
+idna==3.3
 iniconfig==1.1.1
 Jinja2==2.11.3
 Mako==1.1.5
