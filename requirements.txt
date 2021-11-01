@@ -1,7 +1,7 @@
 aiohttp==3.7.4.post0
 aiohttp-apispec==2.2.1
 aiohttp-jwt==0.6.1
-aiopg==1.3.2
+aiopg==1.3.3
 aioredis==2.0.0
 alembic==1.7.4
 apispec==3.3.2
