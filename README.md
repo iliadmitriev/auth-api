@@ -54,7 +54,7 @@ docker run -d --name auth-redis --hostname auth-redis \
     -p 6379:6379 redis:6.2.5-alpine3.14
 
 docker run -d --name auth-postgres --hostname auth-postgres \
-    -p 5432:5432 --env-file .env postgres:13.4-alpine3.14
+    -p 5432:5432 --env-file .env postgres:14-alpine
 ```
 5. install pip modules from project requirements
 ```shell
