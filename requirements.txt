@@ -8,7 +8,7 @@ apispec==3.3.2
 async-timeout==3.0.1
 attrs==21.2.0
 chardet==4.0.0
-coverage==6.0.2
+coverage==6.1.1
 hiredis==2.0.0
 idna==3.3
 iniconfig==1.1.1
@@ -36,4 +36,4 @@ SQLAlchemy==1.4.26
 toml==0.10.2
 typing-extensions==3.10.0.2
 webargs==5.5.3
-yarl==1.7.0
+yarl==1.7.2
