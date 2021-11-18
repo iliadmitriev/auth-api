@@ -8,14 +8,14 @@ apispec==3.3.2
 async-timeout==3.0.1
 attrs==21.2.0
 chardet==4.0.0
-coverage==6.1.1
+coverage==6.1.2
 hiredis==2.0.0
 idna==3.3
 iniconfig==1.1.1
 Jinja2==2.11.3
 Mako==1.1.5
 MarkupSafe==2.0.1
-marshmallow==3.14.0
+marshmallow==3.14.1
 marshmallow-sqlalchemy==0.26.1
 multidict==5.2.0
 packaging==21.3
