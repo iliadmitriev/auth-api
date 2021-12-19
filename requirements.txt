@@ -19,7 +19,7 @@ marshmallow==3.14.1
 marshmallow-sqlalchemy==0.26.1
 multidict==5.2.0
 packaging==21.3
-pluggy==0.13.1
+pluggy==1.0.0
 psycopg2==2.9.2
 psycopg2-binary==2.9.2
 py==1.11.0
