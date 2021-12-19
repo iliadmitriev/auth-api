@@ -32,10 +32,16 @@ def drop_test_db(test_db_name):
     con = psycopg2.connect(dsn=dsn)
     con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = con.cursor()
-    cur.execute(sql.SQL("DROP DATABASE IF EXISTS {}").format(
-        sql.Identifier(test_db_name))
-    )
-    cur.close()
+
+    try:
+        cur.execute(sql.SQL("DROP DATABASE IF EXISTS {}").format(
+            sql.Identifier(test_db_name))
+        )
+    except psycopg2.errors.ObjectInUse:
+        pass
+    finally:
+        cur.close()
+
 
 
 def setup_test_db_dsn():
