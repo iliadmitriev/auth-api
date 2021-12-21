@@ -33,7 +33,7 @@ psycopg2==2.9.2
 psycopg2-binary==2.9.2
 py==1.11.0
 pycodestyle==2.7.0
-pyflakes==2.3.1
+pyflakes==2.4.0
 PyJWT==2.3.0
 pylint==2.10.2
 pyparsing==3.0.6
