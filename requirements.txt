@@ -46,7 +46,7 @@ PyYAML==6.0
 six==1.16.0
 SQLAlchemy==1.4.28
 toml==0.10.2
-tomli==1.2.2
+tomli==2.0.0
 typing-extensions==4.0.1
 webargs==5.5.3
 wrapt==1.12.1
