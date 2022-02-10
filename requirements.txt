@@ -27,7 +27,7 @@ marshmallow-sqlalchemy==0.27.0
 mccabe==0.6.1
 multidict==5.2.0
 packaging==21.3
-platformdirs==2.4.1
+platformdirs==2.5.0
 pluggy==1.0.0
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
@@ -46,7 +46,7 @@ PyYAML==6.0
 six==1.16.0
 SQLAlchemy==1.4.30
 toml==0.10.2
-tomli==2.0.0
+tomli==2.0.1
 typing-extensions==4.0.1
 webargs==5.5.3
 wrapt==1.13.3
