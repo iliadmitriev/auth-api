@@ -22,7 +22,7 @@ Jinja2==3.0.3
 lazy-object-proxy==1.7.1
 Mako==1.2.0
 MarkupSafe==2.1.0
-marshmallow==3.14.1
+marshmallow==3.15.0
 marshmallow-sqlalchemy==0.28.0
 mccabe==0.6.1
 multidict==6.0.2
