@@ -51,5 +51,5 @@ toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.2.0
 webargs==5.5.3
-wrapt==1.13.3
+wrapt==1.14.1
 yarl==1.7.2
