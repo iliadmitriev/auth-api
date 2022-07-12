@@ -50,6 +50,6 @@ SQLAlchemy==1.4.39
 toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.2.0
-webargs==5.5.3
+webargs==8.1.0
 wrapt==1.14.1
 yarl==1.7.2
