@@ -21,7 +21,7 @@ iniconfig==1.1.1
 isort==5.10.1
 Jinja2==3.1.2
 lazy-object-proxy==1.7.1
-Mako==1.2.1
+Mako==1.2.2
 MarkupSafe==2.1.1
 marshmallow==3.17.1
 marshmallow-sqlalchemy==0.28.0
