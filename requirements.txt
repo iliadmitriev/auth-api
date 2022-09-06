@@ -25,7 +25,7 @@ Mako==1.2.2
 MarkupSafe==2.1.1
 marshmallow==3.17.1
 marshmallow-sqlalchemy==0.28.1
-mccabe==0.6.1
+mccabe==0.7.0
 multidict==6.0.2
 packaging==21.3
 platformdirs==2.5.2
