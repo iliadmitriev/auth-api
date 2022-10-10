@@ -6,7 +6,7 @@ aioredis==2.0.1
 aiosignal==1.2.0
 alembic==1.8.1
 apispec==3.3.2
-astroid==2.12.10
+astroid==2.12.11
 async-timeout==4.0.2
 attrs==22.1.0
 chardet==5.0.0
