@@ -8,7 +8,7 @@ alembic==1.9.0
 apispec==3.3.2
 astroid==2.12.13
 async-timeout==4.0.2
-attrs==22.1.0
+attrs==22.2.0
 chardet==5.1.0
 charset-normalizer==2.1.1
 coverage==6.5.0
