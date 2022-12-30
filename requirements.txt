@@ -4,7 +4,7 @@ aiohttp-jwt==0.6.1
 aiopg==1.4.0
 aioredis==2.0.1
 aiosignal==1.3.1
-alembic==1.9.0
+alembic==1.9.1
 apispec==3.3.2
 astroid==2.12.13
 async-timeout==4.0.2
