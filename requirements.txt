@@ -53,4 +53,4 @@ tomlkit==0.11.6
 typing_extensions==4.4.0
 webargs==5.5.3
 wrapt==1.14.1
-yarl==1.8.1
+yarl==1.8.2
