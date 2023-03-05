@@ -36,12 +36,12 @@ source venv/bin/activate
 ```shell
 cat > .env << _EOF_
 SECRET_KEY=testsecretkey
-POSTGRES_HOST=192.168.10.1
+POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_DB=auth
 POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
-REDIS_LOCATION=redis://192.168.10.1:6379/0
+REDIS_LOCATION=redis://localhost:6379/0
 _EOF_
 
 export $(cat .env | xargs)
@@ -51,10 +51,10 @@ secret key should be a random string which is kept in secret
 4. create db instances (postgres, redis)
 ```shell
 docker run -d --name auth-redis --hostname auth-redis \
-    -p 6379:6379 redis:6.2.5-alpine3.14
+    -p 6379:6379 redis:7-alpine
 
 docker run -d --name auth-postgres --hostname auth-postgres \
-    -p 5432:5432 --env-file .env postgres:13.4-alpine3.14
+    -p 5432:5432 --env-file .env postgres:15-alpine
 ```
 5. install pip modules from project requirements
 ```shell

@@ -14,7 +14,7 @@ JWT_EXP_REFRESH_SECONDS = env.get('JWT_EXP_REFRESH_SECONDS', 86400)
 JWT_ALGORITHM = env.get('JWT_ALGORITHM', 'HS256')
 
 conf = {
-    'engine': env.get('ENGINE', 'postgresql'),
+    'engine': env.get('ENGINE', 'postgresql+asyncpg'),
     'database': env.get('POSTGRES_DB'),
     'user': env.get('POSTGRES_USER'),
     'password': env.get('POSTGRES_PASSWORD'),

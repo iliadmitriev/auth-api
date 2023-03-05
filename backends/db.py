@@ -1,12 +1,12 @@
-import aiopg.sa
 from psycopg2 import errors
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import select, insert
 
 from helpers.errors import UserAlreadyExists, RecordNotFound, BadRequest
 
 
 async def init_pg(app):
-    engine = await aiopg.sa.create_engine(
+    engine = await create_async_engine(
         dsn=app['dsn'],
         minsize=10, maxsize=30
     )

@@ -1,7 +1,5 @@
 import json
 
-from aiohttp.test_utils import unittest_run_loop
-
 from backends.db import create_user
 from helpers.utils import generate_password_hash
 from models.users import User
@@ -43,7 +41,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         assert 'refresh_token' in resp_data
         return resp_data, user
 
-    @unittest_run_loop
     async def test_user_list_view_OK(self):
         credentials, _ = await self._user_authorize_jwt(
             {
@@ -63,7 +60,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         response_json = json.loads(await response.text())
         assert isinstance(response_json, list)
 
-    @unittest_run_loop
     async def test_user_list_view_post_add_user(self):
         credentials, _ = await self._user_authorize_jwt(
             {
@@ -124,7 +120,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert response.status == 400
 
-    @unittest_run_loop
     async def test_user_detail_view_OK(self):
         credentials, user = await self._user_authorize_jwt(
             {
@@ -144,7 +139,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         response_json = json.loads(await response.text())
         assert isinstance(response_json, dict)
 
-    @unittest_run_loop
     async def test_user_detail_put_view_OK(self):
         credentials, user = await self._user_authorize_jwt(
             {
@@ -164,7 +158,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         response_json = json.loads(await response.text())
         assert isinstance(response_json, dict)
 
-    @unittest_run_loop
     async def test_user_detail_patch_view_OK(self):
         credentials, user = await self._user_authorize_jwt(
             {
@@ -184,7 +177,6 @@ class UserTestCase(AioHTTPTestCaseWithTestDB):
         response_json = json.loads(await response.text())
         assert isinstance(response_json, dict)
 
-    @unittest_run_loop
     async def test_user_delete_patch_view_OK(self):
         credentials, user = await self._user_authorize_jwt(
             {

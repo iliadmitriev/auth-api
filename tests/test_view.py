@@ -38,12 +38,10 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         assert user is not None
         return user
 
-    @unittest_run_loop
     async def test_auth_register_get_405(self):
         resp = await self.client.get('/auth/v1/register')
         assert resp.status == 405
 
-    @unittest_run_loop
     async def test_auth_register_post_invalid_email(self):
         headers = {
             'Content-Type': 'application/json'
@@ -60,7 +58,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 400
 
-    @unittest_run_loop
     async def test_auth_register_post_password_dont_match(self):
         headers = {
             'Content-Type': 'application/json'
@@ -77,7 +74,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 400
 
-    @unittest_run_loop
     async def test_auth_register_user_exists(self):
         headers = {
             'Content-Type': 'application/json'
@@ -100,7 +96,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 400
 
-    @unittest_run_loop
     async def test_auth_register_post_200(self):
         headers = {
             'Content-Type': 'application/json'
@@ -117,7 +112,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 200
 
-    @unittest_run_loop
     async def test_auth_login_post_200(self):
         headers = {
             'Content-Type': 'application/json'
@@ -138,7 +132,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 200
 
-    @unittest_run_loop
     async def test_auth_login_post_404_wrong_password(self):
         headers = {
             'Content-Type': 'application/json'
@@ -160,7 +153,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 404
 
-    @unittest_run_loop
     async def test_auth_login_post_403_user_is_not_active(self):
         headers = {
             'Content-Type': 'application/json'
@@ -181,7 +173,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         )
         assert resp.status == 403
 
-    @unittest_run_loop
     async def test_auth_login_post_404_non_existent_user(self):
         headers = {
             'Content-Type': 'application/json'
@@ -218,7 +209,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         assert 'refresh_token' in resp_data
         return resp_data
 
-    @unittest_run_loop
     async def test_auth_token_200_super_user_OK(self):
         resp_data = await self._user_authorize_jwt(
             data={
@@ -230,7 +220,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         token = await decode_token(resp_data.get('access_token'))
         assert token.get('scope') == 'admin'
 
-    @unittest_run_loop
     async def test_auth_refresh_token_200_OK(self):
         resp_data = await self._user_authorize_jwt(data={
             'email': 'user1_with_token1@example.com',
@@ -251,7 +240,6 @@ class AuthTestCase(AioHTTPTestCaseWithTestDB):
         assert 'access_token' in refresh_data
         assert 'refresh_token' in refresh_data
 
-    @unittest_run_loop
     async def test_auth_refresh_token_not_found(self):
         resp_data = await self._user_authorize_jwt(data={
             'email': 'user1_with_token2@example.com',
