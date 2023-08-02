@@ -28,7 +28,7 @@ marshmallow==3.19.0
 marshmallow-sqlalchemy==0.29.0
 mccabe==0.7.0
 multidict==6.0.4
-packaging==23.0
+packaging==23.1
 platformdirs==3.5.1
 pluggy==1.0.0
 psycopg2==2.9.6
