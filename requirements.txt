@@ -34,7 +34,7 @@ pluggy==1.0.0
 psycopg2==2.9.6
 psycopg2-binary==2.9.5
 py==1.11.0
-pycodestyle==2.10.0
+pycodestyle==2.11.0
 pyflakes==3.0.1
 PyJWT==2.8.0
 pylint==2.16.1
