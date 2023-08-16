@@ -30,7 +30,7 @@ mccabe==0.7.0
 multidict==6.0.4
 packaging==23.1
 platformdirs==3.5.1
-pluggy==1.0.0
+pluggy==1.2.0
 psycopg2==2.9.6
 psycopg2-binary==2.9.5
 py==1.11.0
