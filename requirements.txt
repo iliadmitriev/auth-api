@@ -16,7 +16,7 @@ dill==0.3.7
 exceptiongroup==1.1.2
 flake8==6.0.0
 frozenlist==1.4.0
-hiredis==2.2.2
+hiredis==2.2.3
 idna==3.4
 iniconfig==2.0.0
 isort==5.12.0
