@@ -15,7 +15,7 @@ coverage==7.3.2
 dill==0.3.7
 exceptiongroup==1.2.0
 flake8==6.0.0
-frozenlist==1.4.0
+frozenlist==1.4.1
 hiredis==2.2.3
 idna==3.6
 iniconfig==2.0.0
