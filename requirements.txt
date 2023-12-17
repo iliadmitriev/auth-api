@@ -11,7 +11,7 @@ async-timeout==4.0.3
 attrs==23.1.0
 chardet==5.2.0
 charset-normalizer==3.3.2
-coverage==7.3.2
+coverage==7.3.3
 dill==0.3.7
 exceptiongroup==1.2.0
 flake8==6.0.0
