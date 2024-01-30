@@ -1,4 +1,4 @@
-aiohttp==3.9.2
+aiohttp==3.9.3
 aiohttp-apispec==3.0.0b2
 aiohttp-jwt==0.6.1
 aiopg==1.4.0
