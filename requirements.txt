@@ -47,7 +47,7 @@ python-dateutil==2.9.0.post0
 python-editor==1.0.4
 PyYAML==6.0.1
 six==1.16.0
-SQLAlchemy==1.4.45
+SQLAlchemy==2.0.31
 toml==0.10.2
 tomli==2.0.1
 tomlkit==0.12.4
