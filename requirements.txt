@@ -13,7 +13,7 @@ chardet==5.2.0
 charset-normalizer==3.4.0
 coverage==7.6.1
 dill==0.3.9
-exceptiongroup==1.2.0
+exceptiongroup==1.2.2
 flake8==6.0.0
 frozenlist==1.4.1
 hiredis==3.0.0
