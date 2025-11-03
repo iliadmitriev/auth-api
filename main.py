@@ -14,9 +14,9 @@ def main(argv):
         app,
         access_log_format=access_log_format,
         host=APP_HOST,
-        port=APP_PORT
+        port=int(APP_PORT),  # Convert to int to satisfy aiohttp
     )
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main(sys.argv[1:])

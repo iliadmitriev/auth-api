@@ -5,291 +5,403 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/iliadmitriev/auth-api/badge)](https://www.codefactor.io/repository/github/iliadmitriev/auth-api)
 [![Documentation Status](https://readthedocs.org/projects/auth-api/badge/?version=latest)](https://auth-api.readthedocs.io/en/latest/?badge=latest)
 
-JWT auth service for educational purposes. Built using aiohttp, SQLAlchemy 2.0, Pydantic, Redis, and modern Python tooling.
+JWT auth service for educational purposes. It's build using aiohttp, asyncpg, redis, SQLAlchemy, alembic, pydantic, PyJWT, pytest 
 
-## Modern Python Stack
+New realization of https://github.com/iliadmitriev/auth
+started from a scratch
 
-- **Python 3.11+** - Latest Python features and performance improvements
-- **aiohttp** - Async HTTP framework
-- **SQLAlchemy 2.0** - Modern async ORM
-- **Pydantic 2.0** - Data validation and settings management
-- **Redis** - Async Redis client
-- **Alembic** - Database migrations
-- **PyJWT** - JSON Web Token implementation
-- **pytest** - Testing framework
+## Table of Contents
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Setup with Docker](#setup-with-docker)
+  * [PostgreSQL Database](#postgresql-database)
+  * [Redis Cache](#redis-cache)
+- [Running the Application](#running-the-application)
+- [API Usage Examples](#api-usage-examples)
+  * [User Registration](#user-registration)
+  * [User Login](#user-login)
+  * [Token Refresh](#token-refresh)
+  * [User Management](#user-management)
+- [Development](#development)
+  * [Pre-commit Hooks](#pre-commit-hooks)
+  * [Testing](#testing)
+  * [Code Quality](#code-quality)
 
-## Setup with uv (recommended)
+## Prerequisites
 
-This project uses [uv](https://github.com/astral-sh/uv) for fast dependency management.
-
-### Prerequisites
 - Python 3.11+
-- [uv](https://github.com/astral-sh/uv) installed
+- [uv](https://github.com/astral-sh/uv) for fast dependency management
+- Docker and Docker Compose (for database services)
+- PostgreSQL 13+ (when running without Docker)
+- Redis 6+ (when running without Docker)
 
-### Installation
+## Installation
 
-1. Install dependencies:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/iliadmitriev/auth-api.git
+   cd auth-api
+   ```
+
+2. Install uv if you haven't already:
+   ```bash
+   # On macOS/Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # Or using pip
+   pip install uv
+   ```
+
+3. Install dependencies using uv:
    ```bash
    uv sync
    ```
 
-2. Activate the virtual environment:
-   ```bash
-   source .venv/bin/activate
-   # or use uv run to run commands in the environment
-   uv run python main.py
-   ```
+## Configuration
 
-### Running the application
+The application uses environment variables for configuration. Create a `.env` file in the project root:
 
 ```bash
-# Run directly with uv
+# Application settings
+APP_PORT=8080
+APP_HOST=0.0.0.0
+
+# Database settings
+POSTGRES_DB=auth
+POSTGRES_USER=auth
+POSTGRES_PASSWORD=authsecret
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+# Redis settings
+REDIS_LOCATION=redis://localhost:6379/0
+
+# JWT settings
+SECRET_KEY=your-secret-key-here
+JWT_EXP_ACCESS_SECONDS=300
+JWT_EXP_REFRESH_SECONDS=86400
+JWT_ALGORITHM=HS256
+
+# Database engine (use postgresql+asyncpg for asyncpg)
+ENGINE=postgresql+asyncpg
+```
+
+## Setup with Docker
+
+### PostgreSQL Database
+
+Start PostgreSQL using Docker:
+
+```bash
+# Create a docker-compose.yml file for database services
+cat > docker-compose.db.yml << EOF
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13.4-alpine3.14
+    container_name: auth-postgres
+    hostname: auth-postgres
+    environment:
+      POSTGRES_DB: \${POSTGRES_DB:-auth}
+      POSTGRES_USER: \${POSTGRES_USER:-auth}
+      POSTGRES_PASSWORD: \${POSTGRES_PASSWORD:-authsecret}
+    ports:
+      - "\${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  redis:
+    image: redis:6.2.5-alpine3.14
+    container_name: auth-redis
+    hostname: auth-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+
+networks:
+  auth-network:
+    driver: bridge
+EOF
+
+# Start the database services
+docker-compose -f docker-compose.db.yml up -d
+```
+
+Apply database migrations:
+```bash
+# Run migrations
+docker-compose -f docker-compose.db.yml exec postgres alembic upgrade head
+```
+
+Stop database services:
+```bash
+# Stop services
+docker-compose -f docker-compose.db.yml down
+```
+
+### Full Stack with Application
+
+For development with the full stack:
+
+```bash
+# Create a complete docker-compose.yml file
+cat > docker-compose.yml << EOF
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: auth-api
+    hostname: auth-api
+    ports:
+      - "\${APP_PORT:-8080}:\${APP_PORT:-8080}"
+    environment:
+      - APP_PORT=\${APP_PORT:-8080}
+      - APP_HOST=0.0.0.0
+      - POSTGRES_DB=\${POSTGRES_DB:-auth}
+      - POSTGRES_USER=\${POSTGRES_USER:-auth}
+      - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD:-authsecret}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_LOCATION=redis://redis:6379/0
+      - SECRET_KEY=\${SECRET_KEY:-your-secret-key-here}
+      - JWT_EXP_ACCESS_SECONDS=\${JWT_EXP_ACCESS_SECONDS:-300}
+      - JWT_EXP_REFRESH_SECONDS=\${JWT_EXP_REFRESH_SECONDS:-86400}
+      - JWT_ALGORITHM=\${JWT_ALGORITHM:-HS256}
+      - ENGINE=postgresql+asyncpg
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - auth-network
+
+  postgres:
+    image: postgres:13.4-alpine3.14
+    container_name: auth-postgres
+    hostname: auth-postgres
+    environment:
+      POSTGRES_DB: \${POSTGRES_DB:-auth}
+      POSTGRES_USER: \${POSTGRES_USER:-auth}
+      POSTGRES_PASSWORD: \${POSTGRES_PASSWORD:-authsecret}
+    ports:
+      - "\${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  redis:
+    image: redis:6.2.5-alpine3.14
+    container_name: auth-redis
+    hostname: auth-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+
+networks:
+  auth-network:
+    driver: bridge
+EOF
+
+# Start the full stack
+docker-compose up -d
+
+# Apply migrations
+docker-compose exec api alembic upgrade head
+
+# Stop the full stack
+docker-compose down
+```
+
+## Running the Application
+
+### Local Development
+
+```bash
+# Source environment variables
+export \$(cat .env | xargs)
+
+# Run the application
 uv run python main.py
-
-# Or activate the environment first
-source .venv/bin/activate
-python main.py
 ```
 
-### Running tests
+### With Docker
 
 ```bash
-uv run pytest
-# or with coverage
-uv run pytest --cov=.
-```
+# Build and run with Docker
+docker build -t auth-api .
 
-### Development commands
-
-```bash
-# Run with uv (recommended)
-uv run python main.py
-
-# Install additional dependencies
-uv add pytest
-uv add black --group dev
-
-# Update lock file after changing pyproject.toml
-uv lock
-
-# Sync dependencies after lock file changes
-uv sync
-```
-
-### Code Quality Tools
-
-This project uses modern Python development tools:
-
-- **Ruff**: Ultra-fast Python linter and formatter
-- **BasedPyright**: Type checker with better performance than mypy
-- **pytest**: Testing framework
-
-```bash
-# Linting with Ruff
-uv run ruff check .
-
-# Formatting with Ruff
-uv run ruff format .
-
-# Type checking with BasedPyright
-uv run basedpyright .
-
-# Run all checks
-uv run ruff check . && uv run basedpyright .
-```
-
-### Traditional setup (without uv)
-
-If you prefer not to use uv:
-
-1. Create virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -e .
-   pip install -e ".[dev]"
-   ```
-
-3. Run the application:
-   ```bash
-   python main.py
-   ```
-
-## How to use
-
-Read API documentation at http://localhost:8080/auth/v1/docs
-
-### With curl
-
-1. Register user:
-   ```bash
-   curl -v -F password=321123 -F password2=321123 -F email=user@example.com \
-     --url http://localhost:8080/auth/v1/register
-   ```
-
-2. Get a token pair (access and refresh):
-   ```bash
-   curl -v -F password=321123 -F email=user@example.com \
-     --url http://localhost:8080/auth/v1/login
-   ```
-
-3. Refresh access token:
-   ```bash
-   curl -v --url http://localhost:8080/auth/v1/refresh \
-    -F refresh_token=YOUR_REFRESH_TOKEN
-   ```
-
-### With HTTPie
-
-Install [HTTPie](https://github.com/httpie/httpie), [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth), [jq](https://github.com/stedolan/jq)
-
-1. Set login and password to environment variables:
-   ```bash
-   AUTH_EMAIL=admin@example.com
-   AUTH_PASS=321123
-   ```
-
-2. Login and get refresh token:
-   ```bash
-   REFRESH_TOKEN=$(http :8080/auth/v1/login email=$AUTH_EMAIL password=$AUTH_PASS | jq --raw-output '.refresh_token')
-   ```
-
-3. Using refresh token, get an access token:
-   ```bash
-   ACCESS_TOKEN=$(http :8080/auth/v1/refresh refresh_token=$REFRESH_TOKEN | jq --raw-output '.access_token') 
-   ```
-
-4. Make request to users API with access token:
-   ```bash
-   http -v -A jwt -a $ACCESS_TOKEN :8080/auth/v1/users
-   ```
-
-## Testing
-
-### Run tests
-```bash
-uv run pytest
-```
-
-### Run tests with coverage
-```bash
-uv run pytest --cov=. --cov-report=term-missing --cov-fail-under=90
-```
-
-### Run tests with HTML report
-```bash
-# Run tests and generate report
-uv run pytest --cov=. --cov-report=html
-
-# Open report
-open htmlcov/index.html 
-```
-
-## Docker
-
-### Build
-```bash
-docker build -t auth_api ./
-```
-
-### Run
-```bash
+# Run the container
 docker run -d -p 8080:8080 --name auth-api \
-  --hostname auth-api --env-file .env auth_api
+  --hostname auth-api --env-file .env auth-api
 ```
 
-## Docker-compose
+## API Usage Examples
 
-1. Create `.env` file with environment variables:
-   ```bash
-   cat > .env << _EOF_
-   SECRET_KEY=testsecretkey
-   POSTGRES_HOST=auth-postgres
-   POSTGRES_PORT=5432
-   POSTGRES_DB=auth
-   POSTGRES_USER=auth
-   POSTGRES_PASSWORD=authsecret
-   REDIS_LOCATION=redis://auth-redis:6379/0
-   _EOF_
-   ```
+### User Registration
 
-2. Pull, build and run:
-   ```bash
-   docker-compose up -d
-   ```
+```bash
+# Register a new user
+curl -v -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"secret","password2":"secret"}' \
+  http://localhost:8080/auth/v1/register
 
-3. Apply migrations:
-   ```bash
-   docker-compose exec api alembic upgrade head
-   ```
+# Response: 200 OK
+# {
+#   "id": 1,
+#   "email": "user@example.com",
+#   "is_active": true,
+#   "is_superuser": false,
+#   "created": "2023-01-01T00:00:00",
+#   "last_login": null,
+#   "confirmed": false
+# }
+```
 
-4. Full cleanup:
-   ```bash
-   docker-compose down --volumes --remove-orphans --rmi all
-   ```
+### User Login
 
-## Development Workflow
+```bash
+# Login to get JWT tokens
+curl -v -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"secret"}' \
+  http://localhost:8080/auth/v1/login
 
-### Code Quality
+# Response: 200 OK
+# {
+#   "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+#   "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+# }
+```
 
-This project uses modern Python tooling for code quality:
+### Token Refresh
 
-1. **Ruff** for linting and formatting:
-   ```bash
-   uv run ruff check .          # Check for issues
-   uv run ruff format .          # Format code
-   ```
+```bash
+# Refresh access token using refresh token
+curl -v -H "Content-Type: application/json" \
+  -d '{"refresh_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."}' \
+  http://localhost:8080/auth/v1/refresh
 
-2. **BasedPyright** for type checking:
-   ```bash
-   uv run basedpyright .         # Type check
-   ```
+# Response: 200 OK
+# {
+#   "access_token": "new_access_token...",
+#   "refresh_token": "new_refresh_token..."
+# }
+```
 
-3. **pytest** for testing:
-   ```bash
-   uv run pytest                 # Run tests
-   uv run pytest --cov=.         # Run tests with coverage
-   ```
+### User Management (Admin Only)
+
+```bash
+# Get list of users (requires admin token)
+curl -v -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  http://localhost:8080/auth/v1/users
+
+# Get specific user (requires admin token)
+curl -v -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  http://localhost:8080/auth/v1/users/1
+
+# Create new user (requires admin token)
+curl -v -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  -d '{"email":"newuser@example.com","password":"secret","is_active":true,"is_superuser":false}' \
+  http://localhost:8080/auth/v1/users
+
+# Update user (requires admin token)
+curl -v -X PUT -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  -d '{"email":"updated@example.com","is_active":true,"is_superuser":false}' \
+  http://localhost:8080/auth/v1/users/1
+
+# Partially update user (requires admin token)
+curl -v -X PATCH -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  -d '{"is_active":false}' \
+  http://localhost:8080/auth/v1/users/1
+
+# Delete user (requires admin token)
+curl -v -X DELETE -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN" \
+  http://localhost:8080/auth/v1/users/1
+```
+
+## Development
 
 ### Pre-commit Hooks
 
-Set up pre-commit hooks for automatic code quality checks:
+This project uses pre-commit hooks to ensure code quality:
+
 ```bash
+# Install pre-commit hooks
 uv run pre-commit install
+
+# Run all pre-commit checks manually
+uv run pre-commit run --all-files
+
+# Skip pre-commit hooks (not recommended)
+git commit -m "Your message" --no-verify
 ```
 
-## Project Structure
+Pre-commit hooks include:
+- **Ruff linting**: Code style and error checking
+- **Ruff formatting**: Automatic code formatting
+- **BasedPyright**: Type checking
+- **Pytest**: Unit tests
+- **Coverage**: Code coverage check (minimum 60%)
 
+### Testing
+
+```bash
+# Run all tests
+uv run pytest
+
+# Run tests with coverage
+uv run pytest --cov=.
+
+# Run tests with HTML coverage report
+uv run pytest --cov=. --cov-report=html
+
+# Open coverage report
+open htmlcov/index.html
+
+# Run specific test file
+uv run pytest tests/test_unit.py
+
+# Run tests in verbose mode
+uv run pytest -v
 ```
-auth-api/
-├── app/                 # Main application package
-│   ├── auth.py          # Application initialization
-│   ├── middlewares.py   # Custom middlewares
-│   └── settings.py      # Application settings
-├── backends/            # Database and Redis backends
-├── helpers/             # Utility functions and helpers
-├── models/              # SQLAlchemy models
-├── routes/              # URL routing
-├── schemas/             # Pydantic schemas
-├── views/               # View classes
-├── tests/               # Test suite
-├── alembic/             # Database migrations
-├── main.py             # Application entry point
-└── pyproject.toml      # Project configuration
+
+### Code Quality
+
+```bash
+# Run Ruff linting
+uv run ruff check .
+
+# Run Ruff formatting
+uv run ruff format .
+
+# Run BasedPyright type checking
+uv run basedpyright .
+
+# Run all code quality checks
+uv run ruff check . && uv run ruff format . && uv run basedpyright .
 ```
 
-## Contributing
+### Continuous Integration
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+GitHub Actions workflow runs:
+- Pre-commit hooks
+- Unit tests
+- Code coverage check
+- Type checking
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+All checks must pass before merging to master branch.

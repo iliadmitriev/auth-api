@@ -9,7 +9,7 @@ from main import main
 
 def test_app_main_run():
     run_app = mock.Mock()
-    with mock.patch('aiohttp.web.run_app', run_app):
+    with mock.patch("aiohttp.web.run_app", run_app):
         main(argv=None)
     run_app.assert_called_once()
 

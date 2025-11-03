@@ -6,22 +6,18 @@ from helpers.errors import BadRequest, RecordNotFound, UserAlreadyExists
 
 
 async def init_pg(app):
-    engine = create_async_engine(
-        app['dsn'],
-        pool_size=10,
-        max_overflow=20
-    )
-    app['engine'] = engine
-    app['db_session'] = async_sessionmaker(engine, expire_on_commit=False)
+    engine = create_async_engine(app["dsn"], pool_size=10, max_overflow=20)
+    app["engine"] = engine
+    app["db_session"] = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def close_pg(app):
-    if 'engine' in app:
-        await app['engine'].dispose()
+    if "engine" in app:
+        await app["engine"].dispose()
 
 
 def setup_db(app, dsn):
-    app['dsn'] = dsn
+    app["dsn"] = dsn
     app.on_startup.append(init_pg)
     app.on_cleanup.append(close_pg)
 
@@ -33,9 +29,9 @@ async def create_user(session, obj, values):
         record = result.first()
         await session.commit()
         return record
-    except IntegrityError:
+    except IntegrityError as e:
         await session.rollback()
-        raise UserAlreadyExists('User with this email already exists')
+        raise UserAlreadyExists("User with this email already exists") from e
 
 
 async def get_user_by_email(session, obj, email):
@@ -43,7 +39,7 @@ async def get_user_by_email(session, obj, email):
     result = await session.execute(stmt)
     record = result.scalar_one_or_none()
     if not record:
-        raise RecordNotFound(f'{obj.__name__} with email={email} is not found')
+        raise RecordNotFound(f"{obj.__name__} with email={email} is not found")
     return record
 
 
@@ -63,4 +59,4 @@ async def insert_object(session, obj, values):
         return record
     except Exception as e:
         await session.rollback()
-        raise BadRequest(str(e))
+        raise BadRequest(str(e)) from e

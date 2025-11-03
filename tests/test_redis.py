@@ -16,17 +16,15 @@ from backends.redis import (
 
 
 async def test_init_redis():
-    app = {
-        'redis_location': 'redis.example.com'
-    }
+    app = {"redis_location": "redis.example.com"}
     # Create an async mock that returns a mock redis client when awaited
     mock_redis_client = AsyncMock()
     from_url_mock = AsyncMock(return_value=mock_redis_client)
-    with mock.patch('redis.asyncio.from_url', from_url_mock):
+    with mock.patch("redis.asyncio.from_url", from_url_mock):
         await init_redis(app)
 
-    from_url_mock.assert_called_once_with(app['redis_location'])
-    assert app['redis'] == mock_redis_client
+    from_url_mock.assert_called_once_with(app["redis_location"])
+    assert app["redis"] == mock_redis_client
 
 
 def async_return(result):
@@ -37,8 +35,8 @@ def async_return(result):
 
 async def test_redis_close():
     close_mock = MagicMock(return_value=async_return(None))
-    app = {'redis': lambda: None}
-    app['redis'].close = close_mock
+    app = {"redis": lambda: None}
+    app["redis"].close = close_mock
     await close_redis(app)
     close_mock.assert_called_once()
 
@@ -56,8 +54,8 @@ def test_setup_redis():
             return setattr(self, item, value)
 
     app = App()
-    setup_redis(app=app, redis_location='redis location')
-    assert app['redis_location'] == 'redis location'
+    setup_redis(app=app, redis_location="redis location")
+    assert app["redis_location"] == "redis location"
     app.on_startup.append.assert_called_once_with(init_redis)
     app.on_cleanup.append.assert_called_once_with(close_redis)
 
@@ -66,8 +64,8 @@ def test_setup_redis():
 async def test_set_redis_key():
     redis = mock.AsyncMock()
     redis.set.return_value = True
-    res = await set_redis_key(redis_client=redis, key='test key', value='test value')
-    redis.set.assert_called_once_with('test key', 'test value')
+    res = await set_redis_key(redis_client=redis, key="test key", value="test value")
+    redis.set.assert_called_once_with("test key", "test value")
     assert res
 
 
@@ -75,8 +73,10 @@ async def test_set_redis_key():
 async def test_set_redis_key_with_expire():
     redis = mock.AsyncMock()
     redis.set.return_value = True
-    res = await set_redis_key(redis_client=redis, key='test key', value='test value', expire=1000)
-    redis.set.assert_called_once_with('test key', 'test value', ex=1000)
+    res = await set_redis_key(
+        redis_client=redis, key="test key", value="test value", expire=1000
+    )
+    redis.set.assert_called_once_with("test key", "test value", ex=1000)
     assert res
 
 
@@ -84,8 +84,8 @@ async def test_set_redis_key_with_expire():
 async def test_get_redis_key():
     redis = mock.AsyncMock()
     redis.get.return_value = True
-    res = await get_redis_key(redis_client=redis, key='test key')
-    redis.get.assert_called_once_with('test key')
+    res = await get_redis_key(redis_client=redis, key="test key")
+    redis.get.assert_called_once_with("test key")
     assert res
 
 
