@@ -1,67 +1,30 @@
-import pathlib
-import secrets
-import sys
-
-import psycopg2
 import pytest
-from psycopg2 import sql
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from sqlalchemy import create_engine
-
-from app.settings import dsn, conf, redis_location
-from models.users import Base
-
-BASE_PATH = pathlib.Path(__file__).parent.parent
-sys.path.append(BASE_PATH)
+from unittest.mock import AsyncMock, MagicMock
 
 
-def create_test_db():
-    test_db_name = f'test_{secrets.token_hex(nbytes=10)}'
-    con = psycopg2.connect(dsn=dsn)
-    con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = con.cursor()
-    cur.execute(sql.SQL("CREATE DATABASE {}").format(
-        sql.Identifier(test_db_name))
-    )
-    cur.close()
-    return test_db_name
+@pytest.fixture
+def mock_db_session():
+    """Provide a mock database session for testing"""
+    session = AsyncMock()
+    session.execute = AsyncMock()
+    session.commit = AsyncMock()
+    session.rollback = AsyncMock()
+    session.close = AsyncMock()
+    return session
 
 
-def drop_test_db(test_db_name):
-
-    con = psycopg2.connect(dsn=dsn)
-    con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = con.cursor()
-
-    try:
-        cur.execute(sql.SQL("DROP DATABASE IF EXISTS {}").format(
-            sql.Identifier(test_db_name))
-        )
-    except psycopg2.errors.ObjectInUse:
-        pass
-    finally:
-        cur.close()
+@pytest.fixture
+def mock_user_model():
+    """Provide a mock User model for testing"""
+    user_model = MagicMock()
+    return user_model
 
 
-
-def setup_test_db_dsn():
-    test_db = create_test_db()
-    test_db_dsn = f'{conf["engine"]}://{conf["user"]}:{conf["password"]}'\
-        f'@{conf["host"]}:{conf["port"]}/{test_db}'
-    return test_db_dsn, test_db
-
-
-def create_and_migrate_test_db_dsn():
-    test_db_dsn, test_db = setup_test_db_dsn()
-    engine = create_engine(test_db_dsn)
-    Base.metadata.create_all(engine)
-    return test_db_dsn, test_db
-
-
-@pytest.fixture(scope='class')
-def get_dsn(request):
-    test_dsn, test_db = create_and_migrate_test_db_dsn()
-    request.cls.dsn = test_dsn
-    request.cls.redis_location = redis_location
-    yield test_dsn
-    drop_test_db(test_db)
+@pytest.fixture
+def mock_redis_client():
+    """Provide a mock Redis client for testing"""
+    redis_client = AsyncMock()
+    redis_client.get = AsyncMock(return_value=None)
+    redis_client.set = AsyncMock(return_value=True)
+    redis_client.delete = AsyncMock(return_value=1)
+    return redis_client

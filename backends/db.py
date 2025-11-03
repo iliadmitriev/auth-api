@@ -1,21 +1,23 @@
-import aiopg.sa
-from psycopg2 import errors
-from sqlalchemy.sql import select, insert
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy import select, insert
+from sqlalchemy.exc import IntegrityError
 
 from helpers.errors import UserAlreadyExists, RecordNotFound, BadRequest
 
 
 async def init_pg(app):
-    engine = await aiopg.sa.create_engine(
-        dsn=app['dsn'],
-        minsize=10, maxsize=30
+    engine = create_async_engine(
+        app['dsn'],
+        pool_size=10,
+        max_overflow=20
     )
-    app['db'] = engine
+    app['engine'] = engine
+    app['db_session'] = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def close_pg(app):
-    app['db'].close()
-    await app['db'].wait_closed()
+    if 'engine' in app:
+        await app['engine'].dispose()
 
 
 def setup_db(app, dsn):
@@ -24,44 +26,41 @@ def setup_db(app, dsn):
     app.on_cleanup.append(close_pg)
 
 
-async def create_user(conn, obj, values):
+async def create_user(session, obj, values):
     try:
-        result = await conn.execute(
-            insert(obj)
-            .values(**values)
-            .returning(*obj.__table__.columns)
-        )
-        record = await result.first()
-    except errors.UniqueViolation:
-        raise UserAlreadyExists('User with this email is already exists')
-
-    return record
+        stmt = insert(obj).values(**values).returning(*obj.__table__.columns)
+        result = await session.execute(stmt)
+        record = result.first()
+        await session.commit()
+        return record
+    except IntegrityError:
+        await session.rollback()
+        raise UserAlreadyExists('User with this email already exists')
 
 
-async def get_user_by_email(conn, obj, email):
-    result = await conn.execute(select([obj]).where(obj.email == email))
-    record = await result.first()
+async def get_user_by_email(session, obj, email):
+    stmt = select(obj).where(obj.email == email)
+    result = await session.execute(stmt)
+    record = result.scalar_one_or_none()
     if not record:
         raise RecordNotFound(f'{obj.__name__} with email={email} is not found')
     return record
 
 
-async def get_objects(conn, obj):
-    select_query = select([obj])
-    cursor = await conn.execute(select_query)
-    records = await cursor.fetchall()
-    objs = [dict(p) for p in records]
-    return objs
+async def get_objects(session, obj):
+    stmt = select(obj)
+    result = await session.execute(stmt)
+    records = result.scalars().all()
+    return records
 
 
-async def insert_object(conn, obj, values):
+async def insert_object(session, obj, values):
     try:
-        result = await conn.execute(
-            insert(obj)
-            .values(**values)
-            .returning(*obj.__table__.columns)
-        )
-        record = await result.first()
+        stmt = insert(obj).values(**values).returning(*obj.__table__.columns)
+        result = await session.execute(stmt)
+        record = result.first()
+        await session.commit()
+        return record
     except Exception as e:
+        await session.rollback()
         raise BadRequest(str(e))
-    return record

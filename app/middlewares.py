@@ -3,7 +3,7 @@ from json import JSONDecodeError
 from aiohttp import web
 from aiohttp.web_middlewares import middleware
 from aiohttp_jwt import JWTMiddleware
-from marshmallow import ValidationError
+from pydantic import ValidationError as PydanticValidationError
 
 from helpers.errors import (
     BadRequest,
@@ -39,7 +39,7 @@ async def error_middleware(request, handler):
     except (
             BadRequest,
             JSONDecodeError,
-            ValidationError,
+            PydanticValidationError,
             KeyError
     ) as e:
         return await handle_http_error(request, e, status=400)
