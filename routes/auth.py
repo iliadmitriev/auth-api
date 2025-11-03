@@ -1,7 +1,6 @@
-from aiohttp import web
 
-from views.auth import UserRegister, UserLogin, RefreshToken
-from views.users import UserListView, UserDetailView
+from views.auth import RefreshToken, UserLogin, UserRegister
+from views.users import UserDetailView, UserListView
 
 
 def setup_routes(app):

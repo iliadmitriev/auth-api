@@ -4,7 +4,7 @@ import sys
 from aiohttp import web
 
 from app import init_app
-from app.settings import access_log_format, APP_HOST, APP_PORT
+from app.settings import APP_HOST, APP_PORT, access_log_format
 
 
 def main(argv):

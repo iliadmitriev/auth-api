@@ -5,12 +5,8 @@ from aiohttp.web_middlewares import middleware
 from aiohttp_jwt import JWTMiddleware
 from pydantic import ValidationError as PydanticValidationError
 
-from helpers.errors import (
-    BadRequest,
-    UserIsNotActivated,
-    NotFound
-)
 from app.settings import SECRET_KEY
+from helpers.errors import BadRequest, NotFound, UserIsNotActivated
 
 
 async def handle_http_error(request, e, status):

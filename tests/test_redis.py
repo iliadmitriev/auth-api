@@ -2,23 +2,31 @@ import asyncio
 import sys
 from asyncio import Future
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from backends.redis import init_redis, close_redis, setup_redis, set_redis_key, get_redis_key
+from backends.redis import (
+    close_redis,
+    get_redis_key,
+    init_redis,
+    set_redis_key,
+    setup_redis,
+)
 
 
 async def test_init_redis():
     app = {
         'redis_location': 'redis.example.com'
     }
-    from_url_mock = mock.Mock(return_value='test redis server')
+    # Create an async mock that returns a mock redis client when awaited
+    mock_redis_client = AsyncMock()
+    from_url_mock = AsyncMock(return_value=mock_redis_client)
     with mock.patch('redis.asyncio.from_url', from_url_mock):
         await init_redis(app)
 
     from_url_mock.assert_called_once_with(app['redis_location'])
-    assert app['redis'] == 'test redis server'
+    assert app['redis'] == mock_redis_client
 
 
 def async_return(result):
@@ -36,7 +44,7 @@ async def test_redis_close():
 
 
 def test_setup_redis():
-    class App(object):
+    class App:
         def __init__(self):
             self.on_startup = mock.Mock()
             self.on_cleanup = mock.Mock()

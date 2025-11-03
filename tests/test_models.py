@@ -1,19 +1,17 @@
-import pytest
-from datetime import datetime
 
 from models.users import User
 
 
 class TestUserModel:
     """Test User model"""
-    
+
     def test_user_creation(self):
         """Test creating a User instance"""
         user = User(
             email='test@example.com',
             password='hashed_password'
         )
-        
+
         assert user.email == 'test@example.com'
         assert user.password == 'hashed_password'
         # Check defaults - Note: These will be None until saved to DB
@@ -32,7 +30,7 @@ class TestUserModel:
             is_superuser=True,
             confirmed=True
         )
-        
+
         assert user.email == 'test@example.com'
         assert user.password == 'hashed_password'
         assert user.is_active in [True, None]  # Can be None before DB save
@@ -45,5 +43,4 @@ class TestUserModel:
 
     def test_user_inheritance(self):
         """Test User model inheritance from Base"""
-        from sqlalchemy.orm import DeclarativeBase
         assert hasattr(User, '__tablename__')

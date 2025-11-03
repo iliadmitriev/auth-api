@@ -4,8 +4,9 @@ Revision ID: 3f62a6732e18
 Create Date: 2021-03-08 13:39:19.793123
 
 """
-from alembic import op
 import sqlalchemy as sa
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '3f62a6732e18'

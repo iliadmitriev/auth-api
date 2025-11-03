@@ -1,9 +1,9 @@
 from aiohttp import web
+from aiohttp_jwt import check_permissions, login_required, match_any
 from pydantic import ValidationError as PydanticValidationError
-from aiohttp_jwt import login_required, check_permissions, match_any
 
 from backends.db import get_objects, insert_object
-from helpers.utils import get_data_from_request, generate_password_hash
+from helpers.utils import generate_password_hash, get_data_from_request
 from models.users import User
 from schemas.users import schemas
 from views.helpers.params import default_parameters
@@ -26,7 +26,7 @@ if not apispec_available:
     response_400 = {}
     response_404 = {}
 else:
-    from views.helpers.responses import responses_default, response_400, response_404
+    from views.helpers.responses import response_400, response_404, responses_default
 
 
 class UserListView(web.View):
@@ -75,7 +75,7 @@ class UserListView(web.View):
                 error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
                 error_str = "; ".join(error_messages)
                 raise ValueError(error_str)
-                
+
             validated_dict = validated_data.model_dump()
             validated_dict['password'] = await generate_password_hash(validated_dict['password'])
             user = await insert_object(session, User, validated_dict)

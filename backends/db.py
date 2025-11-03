@@ -1,8 +1,8 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy import select, insert
+from sqlalchemy import insert, select
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from helpers.errors import UserAlreadyExists, RecordNotFound, BadRequest
+from helpers.errors import BadRequest, RecordNotFound, UserAlreadyExists
 
 
 async def init_pg(app):

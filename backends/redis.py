@@ -2,9 +2,9 @@ import redis.asyncio as redis
 
 
 async def init_redis(app):
-    app['redis'] = redis.from_url(
-        app['redis_location'],
-    )
+    # Explicitly await the from_url coroutine
+    redis_client = await redis.from_url(app['redis_location'])
+    app['redis'] = redis_client
 
 
 async def close_redis(app):

@@ -1,14 +1,16 @@
 import hashlib
-from datetime import datetime, timedelta
-import jwt
 from base64 import b64encode
+from datetime import UTC, datetime, timedelta
+from uuid import uuid4
+
+import jwt
+
 from app.settings import (
-    SECRET_KEY,
     JWT_ALGORITHM,
     JWT_EXP_ACCESS_SECONDS,
-    JWT_EXP_REFRESH_SECONDS
+    JWT_EXP_REFRESH_SECONDS,
+    SECRET_KEY,
 )
-from uuid import uuid4
 
 
 async def generate_password_hash(passwd: str) -> str:
@@ -42,13 +44,13 @@ async def gen_token_for_user(user):
     access_token = {
         **token,
         'token_type': 'access_token',
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
+        'exp': datetime.now(UTC) + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
     }
 
     refresh_token = {
         **token,
         'token_type': 'refresh_token',
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_REFRESH_SECONDS)
+        'exp': datetime.now(UTC) + timedelta(seconds=JWT_EXP_REFRESH_SECONDS)
     }
 
     return {
@@ -71,7 +73,7 @@ async def get_refresh_token(token):
     access_token = {
         **token,
         'token_type': 'access_token',
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
+        'exp': datetime.now(UTC) + timedelta(seconds=JWT_EXP_ACCESS_SECONDS)
     }
 
     refresh_token = {

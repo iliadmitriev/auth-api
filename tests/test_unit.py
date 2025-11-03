@@ -1,17 +1,22 @@
-import pytest
-import asyncio
-import json
-from unittest.mock import AsyncMock, MagicMock
-from aiohttp import web
 
-from helpers.utils import generate_password_hash, gen_token_for_user, decode_token, get_data_from_request, get_refresh_token
-from helpers.errors import PasswordsDontMatch, RecordNotFound, UserIsNotActivated, RefreshTokenNotFound
+from helpers.errors import (
+    PasswordsDontMatch,
+    RecordNotFound,
+    RefreshTokenNotFound,
+    UserIsNotActivated,
+)
+from helpers.utils import (
+    decode_token,
+    gen_token_for_user,
+    generate_password_hash,
+    get_refresh_token,
+)
 from schemas.users import schemas
 
 
 class TestUtils:
     """Test utility functions without database dependencies"""
-    
+
     async def test_generate_password_hash(self):
         password = "test_password"
         hashed = await generate_password_hash(password)
@@ -85,7 +90,7 @@ class TestUtils:
 
 class TestSchemas:
     """Test Pydantic schemas"""
-    
+
     def test_registration_schema_valid(self):
         data = {
             'email': 'test@example.com',
@@ -161,7 +166,7 @@ class TestSchemas:
 
 class TestErrors:
     """Test custom error classes"""
-    
+
     def test_passwords_dont_match(self):
         error = PasswordsDontMatch("Passwords don't match")
         assert str(error) == "Passwords don't match"

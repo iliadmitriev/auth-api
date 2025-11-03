@@ -11,7 +11,7 @@ def init_app(argv=None):
     app = web.Application()
 
     setup_routes(app)
-    
+
     # Only setup API documentation if aiohttp_apispec is available
     try:
         from aiohttp_apispec import setup_aiohttp_apispec
@@ -26,7 +26,7 @@ def init_app(argv=None):
     except ImportError:
         # aiohttp-apispec not available (e.g. due to distutils removal in Python 3.14)
         pass
-    
+
     setup_middlewares(app)
     setup_db(app, dsn=dsn)
     setup_redis(app, redis_location=redis_location)

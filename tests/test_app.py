@@ -1,10 +1,10 @@
 from logging import Logger
+from unittest import mock
 
 from aiohttp.web_urldispatcher import UrlDispatcher
 
 from app import init_app
 from main import main
-from unittest import mock
 
 
 def test_app_main_run():

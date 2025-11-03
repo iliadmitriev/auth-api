@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr, field_validator
-from typing import Optional
 from datetime import datetime
+
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 class RegistrationSchema(BaseModel):
@@ -32,8 +32,8 @@ class UserBase(BaseModel):
     email: EmailStr
     is_active: bool = False
     is_superuser: bool = False
-    created: Optional[datetime] = None
-    last_login: Optional[datetime] = None
+    created: datetime | None = None
+    last_login: datetime | None = None
     confirmed: bool = False
 
 

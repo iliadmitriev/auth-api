@@ -3,10 +3,20 @@ from pydantic import ValidationError as PydanticValidationError
 
 from app.settings import JWT_EXP_REFRESH_SECONDS
 from backends.db import create_user, get_user_by_email
-from backends.redis import set_redis_key, get_redis_key
-from helpers.errors import PasswordsDontMatch, RecordNotFound, UserIsNotActivated, RefreshTokenNotFound
-from helpers.utils import get_data_from_request, generate_password_hash, gen_token_for_user, decode_token, \
-    get_refresh_token
+from backends.redis import get_redis_key, set_redis_key
+from helpers.errors import (
+    PasswordsDontMatch,
+    RecordNotFound,
+    RefreshTokenNotFound,
+    UserIsNotActivated,
+)
+from helpers.utils import (
+    decode_token,
+    gen_token_for_user,
+    generate_password_hash,
+    get_data_from_request,
+    get_refresh_token,
+)
 from models.users import User
 from schemas.users import schemas
 
@@ -155,7 +165,7 @@ class RefreshToken(web.View):
             error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()]
             error_str = "; ".join(error_messages)
             raise ValueError(error_str)
-        
+
         cache = await get_redis_key(self.request.app['redis'], validated_data.refresh_token)
         if not cache:
             raise RefreshTokenNotFound('Refresh token not found')
