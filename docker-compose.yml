@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: auth-api
+    hostname: auth-api
+    ports:
+      - 8080:8080
+    environment:
+      - APP_PORT=8080
+      - APP_HOST=0.0.0.0
+      - POSTGRES_DB=auth
+      - POSTGRES_USER=auth
+      - POSTGRES_PASSWORD=authsecret
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_LOCATION=redis://redis:6379/0
+      - SECRET_KEY=your-secret-key-here
+      - JWT_EXP_ACCESS_SECONDS=300
+      - JWT_EXP_REFRESH_SECONDS=86400
+      - JWT_ALGORITHM=HS256
+      - ENGINE=postgresql+asyncpg
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - auth-network
+
+  postgres:
+    image: postgres:13.4-alpine3.14
+    container_name: auth-postgres
+    hostname: auth-postgres
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: authsecret
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  redis:
+    image: redis:6.2.5-alpine3.14
+    container_name: auth-redis
+    hostname: auth-redis
+    ports:
+      - 6379:6379
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+
+networks:
+  auth-network:
+    driver: bridge
