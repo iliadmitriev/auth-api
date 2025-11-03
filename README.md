@@ -14,6 +14,7 @@ started from a scratch
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Database Migrations](#database-migrations)
 - [Setup with Docker](#setup-with-docker)
   * [PostgreSQL Database](#postgresql-database)
   * [Redis Cache](#redis-cache)
@@ -85,6 +86,24 @@ JWT_ALGORITHM=HS256
 
 # Database engine (use postgresql+asyncpg for asyncpg)
 ENGINE=postgresql+asyncpg
+```
+
+## Database Migrations
+
+Apply database migrations using alembic:
+
+```bash
+# Apply all migrations
+uv run --env-file .env alembic upgrade head
+
+# Create a new migration
+uv run --env-file .env alembic revision --autogenerate -m "Migration message"
+
+# Downgrade migrations
+uv run --env-file .env alembic downgrade -1
+
+# Check migration status
+uv run --env-file .env alembic current
 ```
 
 ## Setup with Docker

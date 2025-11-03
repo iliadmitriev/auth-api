@@ -1,5 +1,0 @@
-# Modernized Python Web Application
-# This project now uses uv for dependency management.
-# See pyproject.toml for dependencies.
-# To install dependencies: uv sync
-# To run: uv run python main.py

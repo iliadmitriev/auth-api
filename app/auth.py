@@ -1,3 +1,10 @@
+# Import compatibility patch for Python 3.14+ compatibility
+try:
+    from compatibility_patch import *  # noqa: F403
+except ImportError:
+    # Compatibility patch not available, may not be needed depending on environment
+    pass
+
 from aiohttp import web
 
 from app.middlewares import setup_middlewares
