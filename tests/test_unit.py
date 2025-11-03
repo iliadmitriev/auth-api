@@ -1,9 +1,10 @@
 import pytest
 import asyncio
+import json
 from unittest.mock import AsyncMock, MagicMock
 from aiohttp import web
 
-from helpers.utils import generate_password_hash, gen_token_for_user, decode_token
+from helpers.utils import generate_password_hash, gen_token_for_user, decode_token, get_data_from_request, get_refresh_token
 from helpers.errors import PasswordsDontMatch, RecordNotFound, UserIsNotActivated, RefreshTokenNotFound
 from schemas.users import schemas
 
@@ -67,6 +68,19 @@ class TestUtils:
         token = await gen_token_for_user(user_data)
         assert 'access_token' in token
         assert 'refresh_token' in token
+
+    async def test_get_refresh_token(self):
+        # Create a token payload
+        token_payload = {
+            'user_id': 1,
+            'email': 'test@example.com',
+            'jti': 'test-jti'
+        }
+        refreshed_tokens = await get_refresh_token(token_payload)
+        assert 'access_token' in refreshed_tokens
+        assert 'refresh_token' in refreshed_tokens
+        assert isinstance(refreshed_tokens['access_token'], str)
+        assert isinstance(refreshed_tokens['refresh_token'], str)
 
 
 class TestSchemas:
