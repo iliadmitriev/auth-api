@@ -100,24 +100,3 @@ class AMagicMock(MagicMock):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         pass
-
-
-@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
-async def test_set_redis_key_py_3_7():
-    redis = mock.AsyncMock()
-    res = await set_redis_key(redis_client=redis, key='test key', value='test value')
-    assert res
-
-
-@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
-async def test_set_redis_key_with_expire_py_3_7():
-    redis = mock.AsyncMock()
-    res = await set_redis_key(redis_client=redis, key='test key', value='test value', expire=1000)
-    assert res
-
-
-@pytest.mark.skipif(sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7")
-async def test_set_redis_key_without_expire_py_3_7():
-    redis = mock.AsyncMock()
-    res = await get_redis_key(redis_client=redis, key='test key')
-    assert res

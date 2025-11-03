@@ -28,7 +28,10 @@ def init_app(argv=None):
         pass
 
     setup_middlewares(app)
-    setup_db(app, dsn=dsn)
+    
+    # Convert PostgreSQL DSN to asyncpg format if needed
+    db_dsn = dsn.replace('postgresql://', 'postgresql+asyncpg://') if not dsn.startswith('postgresql+asyncpg://') else dsn
+    setup_db(app, dsn=db_dsn)
     setup_redis(app, redis_location=redis_location)
 
     return app

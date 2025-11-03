@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, ConfigDict
 
 
 class RegistrationSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     password: str
     password2: str
     email: EmailStr
@@ -17,6 +19,8 @@ class RegistrationSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     email: EmailStr
     password: str
 
@@ -29,6 +33,8 @@ class LoginSchema(BaseModel):
 
 
 class UserBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)  # Use ConfigDict instead of class-based config
+    
     email: EmailStr
     is_active: bool = False
     is_superuser: bool = False
@@ -38,6 +44,8 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     password: str
 
     @field_validator('password')
@@ -49,22 +57,27 @@ class UserCreate(UserBase):
 
 
 class UserResponse(UserBase):
+    model_config = ConfigDict(from_attributes=True)  # Use ConfigDict instead of class-based config
+    
     id: int
-
-    class Config:
-        from_attributes = True
 
 
 class TokenSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     access_token: str
     refresh_token: str
 
 
 class RefreshTokenSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     refresh_token: str
 
 
 class MessageSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+    
     message: str
 
 

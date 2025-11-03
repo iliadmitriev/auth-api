@@ -8,7 +8,7 @@ dependencies = [
     "aiohttp==3.13.2",
     "aiohttp-apispec==3.0.0b2",  # Updated to beta version with better dependency support
     "aiohttp-jwt==0.6.1",
-    "aiopg==1.4.0",
+    "asyncpg==0.30.0",  # Replaced aiopg with asyncpg
     "redis==7.0.1",
     "alembic==1.17.1",
     "pydantic==2.12.3",
