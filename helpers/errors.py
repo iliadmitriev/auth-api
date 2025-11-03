@@ -1,4 +1,3 @@
-
 class NotFound(Exception):
     """Object was not found general Exception"""
 

@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.3
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: basedpyright
+        name: basedpyright
+        entry: uv run basedpyright
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest-check
+        name: pytest
+        entry: uv run pytest tests/ --disable-warnings -q
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+      - id: coverage-check
+        name: coverage
+        entry: sh -c 'uv run pytest --cov=. --cov-report=term-missing tests/ --cov-fail-under=60 >/dev/null'
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
+

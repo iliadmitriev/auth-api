@@ -1,18 +1,27 @@
-from sqlalchemy import MetaData, Column, Integer, String, Boolean, DateTime, func
-from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
-Base = declarative_base()
-metadata = MetaData()
+from sqlalchemy import Boolean, DateTime, Integer, String, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    email = Column('email', String(100), nullable=False, index=True, unique=True)
-    password = Column('password', String(200))
-    is_active = Column('is_active', Boolean(), default=False)
-    is_superuser = Column('is_superuser', Boolean(), default=False)
-    created = Column('created', DateTime(timezone=True), server_default=func.now())
-    last_login = Column('last_login', DateTime(timezone=True))
-    confirmed = Column('confirmed', Boolean, default=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    email: Mapped[str] = mapped_column(
+        String(100), nullable=False, index=True, unique=True
+    )
+    password: Mapped[str] = mapped_column(String(200))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
+    created: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    last_login: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    confirmed: Mapped[bool] = mapped_column(Boolean, default=False)

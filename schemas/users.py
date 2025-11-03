@@ -1,96 +1,105 @@
-from marshmallow import Schema, fields, validate
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from datetime import datetime
 
-from models.users import User
-
-
-class RegistrationSchema(Schema):
-    password = fields.String(
-        required=True,
-        validate=validate.Length(max=100)
-    )
-    password2 = fields.String(
-        required=True,
-        validate=validate.Length(max=100)
-    )
-    email = fields.String(
-        required=True,
-        validate=validate.Email()
-    )
-
-    class Meta:
-        strict = True
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, model_validator
 
 
-class LoginSchema(Schema):
-    email = fields.String(
-        required=True,
-        validate=validate.Email()
-    )
-    password = fields.String(
-        required=True,
-        validate=validate.Length(max=100)
-    )
+class RegistrationSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
 
-    class Meta:
-        strict = True
+    password: str
+    password2: str
+    email: EmailStr
 
+    @field_validator("password", "password2")
+    @classmethod
+    def validate_password_length(cls, v):
+        if len(v) > 100:
+            raise ValueError("Password must be less than 100 characters")
+        return v
 
-class RegisteredUser(Schema):
-    id = fields.Integer(dump_only=True)
-    email = fields.String(dump_only=True)
-    is_active = fields.Boolean(dump_only=True)
-    created = fields.DateTime(dump_only=True)
-    last_login = fields.DateTime(dump_only=True)
-
-
-class UserSchema(SQLAlchemyAutoSchema):
-    """
-    id = fields.Integer(dump_only=True)
-    email = fields.String(
-        required=True,
-        validate=validate.Email()
-    )
-    is_active = fields.Boolean()
-    is_superuser = fields.Boolean()
-    created = fields.DateTime(dump_only=True)
-    last_login = fields.DateTime(dump_only=True)
-    """
-    class Meta:
-        model = User
-
-    id = auto_field(dump_only=True)
-    created = auto_field(dump_only=True)
-    password = auto_field(load_only=True)
-    last_login = auto_field(dump_only=True)
-    email = auto_field(
-        'email',
-        validate=validate.Email()
-    )
+    @model_validator(mode="after")
+    def check_passwords_match(self) -> "RegistrationSchema":
+        if self.password != self.password2:
+            raise ValueError("passwords do not match")
+        return self
 
 
-class TokenSchema(Schema):
-    access_token = fields.String(dump_only=True)
-    refresh_token = fields.String(dump_only=True)
+class LoginSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+
+    email: EmailStr
+    password: str
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_length(cls, v):
+        if len(v) > 100:
+            raise ValueError("Password must be less than 100 characters")
+        return v
 
 
-class RefreshTokenSchema(Schema):
-    refresh_token = fields.String(required=True)
+class UserBase(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True
+    )  # Use ConfigDict instead of class-based config
+
+    email: EmailStr
+    is_active: bool = False
+    is_superuser: bool = False
+    created: datetime | None = None
+    last_login: datetime | None = None
+    confirmed: bool = False
 
 
-class Message(Schema):
-    message = fields.String(
-        dump_only=True,
-        required=True
-    )
+class UserCreate(UserBase):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+
+    password: str
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_length(cls, v):
+        if len(v) > 100:
+            raise ValueError("Password must be less than 100 characters")
+        return v
 
 
-registration_schema = RegistrationSchema()
-login_schema = LoginSchema()
-registered_user_schema = UserSchema()
-user_schema = UserSchema()
-user_schema_partial = UserSchema(partial=True)
-users_schema = UserSchema(many=True)
-token_schema = TokenSchema()
-refresh_token_schema = RefreshTokenSchema()
-message_schema = Message()
+class UserResponse(UserBase):
+    model_config = ConfigDict(
+        from_attributes=True
+    )  # Use ConfigDict instead of class-based config
+
+    id: int
+
+
+class TokenSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+
+    access_token: str
+    refresh_token: str
+
+
+class RefreshTokenSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+
+    refresh_token: str
+
+
+class MessageSchema(BaseModel):
+    model_config = ConfigDict()  # Use ConfigDict instead of class-based config
+
+    message: str
+
+
+# Create instances of schemas for compatibility with existing code structure
+class Schemas:
+    registration = RegistrationSchema
+    login = LoginSchema
+    user_create = UserCreate
+    user_response = UserResponse
+    token = TokenSchema
+    refresh_token = RefreshTokenSchema
+    message = MessageSchema
+
+
+schemas = Schemas()
