@@ -6,26 +6,26 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "aiohttp==3.13.2",
-    "aiohttp-apispec==2.2.3",
+    "aiohttp-apispec==3.0.0b2",  # Updated to beta version with better dependency support
     "aiohttp-jwt==0.6.1",
     "aiopg==1.4.0",
     "redis==7.0.1",
-    "alembic==1.13.3",
+    "alembic==1.17.1",
     "pydantic==2.12.3",
-    "pydantic-settings==2.4.0",
+    "pydantic-settings==2.11.0",
     "SQLAlchemy==2.0.44",
-    "PyJWT==2.9.0",
+    "PyJWT==2.10.1",
     "email-validator>=1.0.0"
 ]
 
 [dependency-groups]
 dev = [
-    "pytest==8.1.1",
-    "pytest-aiohttp==1.0.5",
-    "pytest-asyncio==0.18.3",
-    "pytest-cov==5.0.0",
-    "ruff==0.10.0",
-    "basedpyright==1.20.0"
+    "pytest==8.4.2",
+    "pytest-aiohttp==1.1.0",
+    "pytest-asyncio==1.2.0",
+    "pytest-cov==7.0.0",
+    "ruff==0.14.3",
+    "basedpyright==1.32.1"
 ]
 
 [tool.setuptools.packages.find]
