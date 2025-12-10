@@ -13,7 +13,7 @@ dependencies = [
     "alembic==1.17.2",
     "pydantic==2.12.5",
     "pydantic-settings==2.12.0",
-    "SQLAlchemy==2.0.44",
+    "SQLAlchemy==2.0.45",
     "PyJWT==2.10.1",
     "email-validator>=1.0.0",
     "greenlet>=3.2.4",
