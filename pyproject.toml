@@ -5,7 +5,7 @@ description = "A modern Python web authentication API"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "aiohttp==3.13.2",
+    "aiohttp==3.13.3",
     "aiohttp-apispec==3.0.0b2", # Updated to beta version with better dependency support
     "aiohttp-jwt==0.6.1",
     "asyncpg==0.31.0", # Replaced aiopg with asyncpg
