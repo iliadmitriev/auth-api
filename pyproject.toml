@@ -16,7 +16,7 @@ dependencies = [
     "SQLAlchemy==2.0.49",
     "PyJWT==2.12.1",
     "email-validator>=1.0.0",
-    "greenlet>=3.2.4",
+    "greenlet>=3.4.0",
 ]
 
 [dependency-groups]
