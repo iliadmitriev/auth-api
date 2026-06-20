@@ -12,7 +12,7 @@ dependencies = [
     "redis==8.0.0",
     "alembic==1.18.4",
     "pydantic==2.13.4",
-    "pydantic-settings==2.14.1",
+    "pydantic-settings==2.14.2",
     "SQLAlchemy==2.0.51",
     "PyJWT==2.13.0",
     "email-validator>=1.0.0",
