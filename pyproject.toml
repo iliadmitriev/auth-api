@@ -10,7 +10,7 @@ dependencies = [
     "aiohttp-jwt==0.6.1",
     "asyncpg==0.31.0", # Replaced aiopg with asyncpg
     "redis==8.1.0",
-    "alembic==1.18.5",
+    "alembic==1.19.0",
     "pydantic==2.13.4",
     "pydantic-settings==2.15.0",
     "SQLAlchemy==2.0.51",
