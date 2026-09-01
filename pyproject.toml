@@ -26,7 +26,7 @@ dev = [
     "pytest-asyncio==1.4.0",
     "pytest-cov==7.1.0",
     "ruff==0.16.5",
-    "basedpyright==1.39.9",
+    "basedpyright==1.39.10",
     "pre-commit==4.6.1"  # Added pre-commit for code quality checks
 ]
 
