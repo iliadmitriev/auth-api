@@ -13,7 +13,7 @@ dependencies = [
     "alembic==1.20.1",
     "pydantic==2.14.3",
     "pydantic-settings==2.16.1",
-    "SQLAlchemy==2.1.6",
+    "SQLAlchemy==2.1.8",
     "PyJWT==2.15.1",
     "email-validator>=1.0.0",
     "greenlet>=3.2.4",
@@ -25,7 +25,7 @@ dev = [
     "pytest-aiohttp==1.1.1",
     "pytest-asyncio==1.4.1.post1",
     "pytest-cov==7.1.0",
-    "ruff==0.17.3",
+    "ruff==0.17.4",
     "basedpyright==1.40.2",
     "pre-commit==4.7.0"  # Added pre-commit for code quality checks
 ]
